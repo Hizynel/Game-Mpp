@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dh3rogcmq4a62"
-path="res://.godot/imported/gear.png-f218c84abcd1ad143e14375bbdbf2a65.ctex"
+uid="uid://dsvbl6bgs3s34"
+path="res://.godot/imported/icon.svg-ab5a1a9f731586623662e80dc4b38f1b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Asset Game/gear.png"
-dest_files=["res://.godot/imported/gear.png-f218c84abcd1ad143e14375bbdbf2a65.ctex"]
+source_file="res://Icon/icon.svg"
+dest_files=["res://.godot/imported/icon.svg-ab5a1a9f731586623662e80dc4b38f1b.ctex"]
 
 [params]
 
@@ -38,3 +38,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

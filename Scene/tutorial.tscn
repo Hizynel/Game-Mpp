@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://cav0hpjjxbe1n"]
+
+[ext_resource type="Script" uid="uid://b007huvwcmj00" path="res://Script/tutorial.gd" id="1_yb1ct"]
+[ext_resource type="Texture2D" uid="uid://dq1gscmmepbrq" path="res://Asset Game/Bg_tutorial.png" id="2_ehuit"]
+[ext_resource type="StyleBox" uid="uid://divx7o4i3rjjo" path="res://Scene/button_ngerti.tres" id="3_ehuit"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_an82v"]
+bg_color = Color(0.6, 0.6, 0.6, 0.18431373)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+corner_radius_top_left = 50
+corner_radius_bottom_right = 50
+corner_detail = 15
+shadow_color = Color(0, 0, 0, 1)
+anti_aliasing_size = 0.01
+
+[node name="Tutorial" type="Control" unique_id=1568934209]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_yb1ct")
+
+[node name="BgTuto" type="Sprite2D" parent="." unique_id=2055580635]
+modulate = Color(0.3527338, 0.36917683, 0.34457043, 1)
+position = Vector2(573, 325)
+scale = Vector2(0.60052085, 0.6)
+texture = ExtResource("2_ehuit")
+
+[node name="ButtonMengerti" type="Button" parent="." unique_id=779905405]
+layout_mode = 0
+offset_left = 740.0
+offset_top = 405.0
+offset_right = 1012.0
+offset_bottom = 492.0
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = ExtResource("3_ehuit")
+theme_override_styles/hover = ExtResource("3_ehuit")
+text = "Mengerti"
+
+[node name="Label" type="Label" parent="." unique_id=822055720]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 0
+offset_left = 150.0
+offset_top = 88.0
+offset_right = 1015.0
+offset_bottom = 375.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxFlat_an82v")
+text = "
+Gunakan panah kiri & kanan atau A & D untuk bergerak. Ambil barang sekolah yang diperbolehkan dan hindari barang yang dilarang. Salah mengambil? Poinmu melayang!
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3

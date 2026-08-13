@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://kqsfealam1wk"]
 
-[ext_resource type="Texture2D" uid="uid://qhel7hbbjhlx" path="res://Asset Game/bg.jpeg" id="1_06t4h"]
-[ext_resource type="Texture2D" uid="uid://dh3rogcmq4a62" path="res://Asset Game/gear.png" id="2_7vrkn"]
+[ext_resource type="Script" uid="uid://dkq73doupxxy8" path="res://Script/main_menu.gd" id="1_kqsxi"]
+[ext_resource type="Texture2D" uid="uid://c7t0qopi2k4f8" path="res://Asset Game/baground.jpeg" id="2_hii65"]
+[ext_resource type="VideoStream" uid="uid://434t4270sff6" path="res://Asset Game/transisi.ogv" id="3_hii65"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0nd4b"]
 bg_color = Color(0.74978, 0.74978, 0.7497799, 1)
@@ -38,11 +39,19 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_kqsxi")
 
-[node name="Bg" type="Sprite2D" parent="." unique_id=348687515]
-position = Vector2(577.5, 324)
-scale = Vector2(1.547043, 1.548077)
-texture = ExtResource("1_06t4h")
+[node name="bg" type="Sprite2D" parent="." unique_id=2100253725]
+position = Vector2(575, 323.49997)
+scale = Vector2(0.8506589, 0.85286456)
+texture = ExtResource("2_hii65")
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="." unique_id=1540652757]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+stream = ExtResource("3_hii65")
+expand = true
 
 [node name="Button" type="Button" parent="." unique_id=133087506]
 layout_mode = 1
@@ -92,7 +101,4 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_rhts7")
 theme_override_styles/hover = SubResource("StyleBoxFlat_06t4h")
 text = "Quit"
 
-[node name="Gear" type="Sprite2D" parent="." unique_id=1781001765]
-position = Vector2(51.375023, 42)
-scale = Vector2(0.2504999, 0.19600001)
-texture = ExtResource("2_7vrkn")
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

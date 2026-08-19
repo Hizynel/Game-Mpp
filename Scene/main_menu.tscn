@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://kqsfealam1wk"]
 
 [ext_resource type="Script" uid="uid://dkq73doupxxy8" path="res://Script/main_menu.gd" id="1_kqsxi"]
-[ext_resource type="Texture2D" uid="uid://c7t0qopi2k4f8" path="res://Asset Game/baground.jpeg" id="2_hii65"]
-[ext_resource type="VideoStream" uid="uid://434t4270sff6" path="res://Asset Game/transisi.ogv" id="3_hii65"]
+[ext_resource type="Texture2D" uid="uid://clsso2x3djq1x" path="res://Asset Game/gerbang.jpeg" id="2_hii65"]
+[ext_resource type="VideoStream" uid="uid://ds4521k6vanje" path="res://Asset Game/gerbang-buka.ogv" id="3_kqsxi"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0nd4b"]
 bg_color = Color(0.74978, 0.74978, 0.7497799, 1)
@@ -50,7 +50,7 @@ texture = ExtResource("2_hii65")
 layout_mode = 0
 offset_right = 1152.0
 offset_bottom = 648.0
-stream = ExtResource("3_hii65")
+stream = ExtResource("3_kqsxi")
 expand = true
 
 [node name="Button" type="Button" parent="." unique_id=133087506]

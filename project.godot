@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Game Mpp"
-run/main_scene="uid://kqsfealam1wk"
+run/main_scene="uid://ct0wv0lmdhm2x"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://Icon/icon.svg"
 

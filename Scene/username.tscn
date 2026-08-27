@@ -8,76 +8,104 @@ content_margin_left = 12.0
 content_margin_top = 12.0
 content_margin_right = 12.0
 content_margin_bottom = 12.0
-bg_color = Color(0.80616075, 0.8061607, 0.8061608, 0.84313726)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-corner_detail = 15
+bg_color = Color(1, 0, 0, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+corner_detail = 20
+
+[sub_resource type="FontVariation" id="FontVariation_wi7m3"]
+variation_embolden = 0.73
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_os3dv"]
 content_margin_left = 8.0
 content_margin_right = 8.0
+bg_color = Color(0.883378, 0.88337797, 0.88337797, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ysrpu"]
+bg_color = Color(0.88235295, 0.88235295, 0.88235295, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="FontVariation" id="FontVariation_acybq"]
+variation_embolden = 0.73
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eweqo"]
+bg_color = Color(1, 0, 0, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+
+[sub_resource type="FontVariation" id="FontVariation_kd28b"]
+variation_embolden = 0.73
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3xska"]
-bg_color = Color(1, 0.41568628, 0.19215687, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+bg_color = Color(0.25546083, 0.73782945, 0.112373285, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+corner_detail = 20
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7dt7m"]
-bg_color = Color(0.8980392, 0.30980393, 0, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+bg_color = Color(0.25490198, 0.7372549, 0.11372549, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+corner_detail = 20
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kd28b"]
-bg_color = Color(0.8980392, 0.30980393, 0, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_po3fh"]
+bg_color = Color(0.25490198, 0.7372549, 0.11372549, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+corner_detail = 20
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x46d5"]
-bg_color = Color(0.8980392, 0.30980393, 0, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b34r5"]
-bg_color = Color(0.8980392, 0.30980393, 0, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hr0mi"]
-bg_color = Color(0.8980392, 0.30980393, 0, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vrqxc"]
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+corner_detail = 20
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7mipf"]
-bg_color = Color(0.8980392, 0.30980393, 0, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+bg_color = Color(0.25490198, 0.7372549, 0.11372549, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+corner_detail = 20
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8besb"]
-bg_color = Color(0.8980392, 0.30980393, 0, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+bg_color = Color(0.25490198, 0.7372549, 0.11372549, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+corner_detail = 20
 
 [node name="Username" type="Control" unique_id=1127487124]
 layout_mode = 3
@@ -89,16 +117,17 @@ grow_vertical = 2
 script = ExtResource("1_kd28b")
 
 [node name="Bg" type="Sprite2D" parent="." unique_id=1293210938]
-position = Vector2(574, 320.99997)
-scale = Vector2(0.84260625, 0.84375006)
+position = Vector2(576.25, 324)
+scale = Vector2(0.84370434, 0.84375006)
 texture = ExtResource("1_lmumk")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1211553238]
+z_index = 1
 layout_mode = 0
-offset_left = 382.0
-offset_top = 328.0
-offset_right = 755.0
-offset_bottom = 486.0
+offset_left = 385.0
+offset_top = 223.0
+offset_right = 756.0
+offset_bottom = 454.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_woch1")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=26608896]
@@ -107,26 +136,50 @@ theme_override_constants/separation = 15
 
 [node name="Title" type="Label" parent="PanelContainer/VBoxContainer" unique_id=238971186]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_shadow_color = Color(0.98039216, 0.98039216, 0.98039216, 0.9882353)
-theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.99705297, 0.99705297, 0.99705297, 1)
+theme_override_fonts/font = SubResource("FontVariation_wi7m3")
 theme_override_font_sizes/font_size = 20
-text = "Username"
+text = "Siapa nama kamu?"
+horizontal_alignment = 1
 
 [node name="UsernameInput" type="LineEdit" parent="PanelContainer/VBoxContainer" unique_id=1362285195]
-layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_os3dv")
-placeholder_text = "Masukan nama kamu..."
-
-[node name="LanjutButton" type="Button" parent="PanelContainer/VBoxContainer" unique_id=544795118]
 custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.047058824, 0.03137255, 0.03137255, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_os3dv")
+theme_override_styles/focus = SubResource("StyleBoxFlat_ysrpu")
+
+[node name="Title2" type="Label" parent="PanelContainer/VBoxContainer" unique_id=982892153]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("FontVariation_acybq")
+theme_override_font_sizes/font_size = 20
+text = "Silakan ketik nama kamu agar kami mengenal kamu"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Panel" type="Panel" parent="." unique_id=1752135869]
+layout_mode = 0
+offset_left = 417.0
+offset_top = 327.0
+offset_right = 730.0
+offset_bottom = 496.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_eweqo")
+
+[node name="LanjutButton" type="Button" parent="Panel" unique_id=544795118]
+z_index = 1
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 0
+offset_left = 38.0
+offset_top = 86.0
+offset_right = 277.0
+offset_bottom = 157.0
+theme_override_fonts/font = SubResource("FontVariation_kd28b")
+theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxFlat_3xska")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_7dt7m")
-theme_override_styles/hover = SubResource("StyleBoxFlat_kd28b")
-theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_x46d5")
-theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_b34r5")
-theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_hr0mi")
+theme_override_styles/hover = SubResource("StyleBoxFlat_po3fh")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_vrqxc")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_7mipf")
 theme_override_styles/focus = SubResource("StyleBoxFlat_8besb")
 text = "Lanjut"

@@ -1,8 +1,7 @@
 extends Control
 
 @onready var username_input = $PanelContainer/VBoxContainer/UsernameInput
-@onready var lanjut_button = $PanelContainer/VBoxContainer/LanjutButton
-
+@onready var lanjut_button = $Panel/LanjutButton
 func _ready():
 	lanjut_button.pressed.connect(_on_lanjut_pressed)
 

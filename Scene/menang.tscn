@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://bg7naybt5mt7f"]
+
+[ext_resource type="Texture2D" uid="uid://u014tq1c0ctq" path="res://Asset Game/menang.jpg" id="1_cj8o0"]
+
+[node name="Node2D" type="Node2D" unique_id=106793596]
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=2029216902]
+offset_right = 1153.0
+offset_bottom = 647.0
+texture = ExtResource("1_cj8o0")

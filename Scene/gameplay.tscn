@@ -1,3 +1,43 @@
 [gd_scene format=3 uid="uid://wcca7qp7gi0v"]
 
+[ext_resource type="Texture2D" uid="uid://7tubd12i21ub" path="res://Asset Game/Screenshot_20260830_140550.png" id="1_0lxte"]
+[ext_resource type="Script" uid="uid://cobyj1xqdog7l" path="res://Script/gameplay.gd" id="1_shn0w"]
+[ext_resource type="Texture2D" uid="uid://b0bs2rytn2v33" path="res://Asset Game/orang-removebg-preview.png" id="2_shn0w"]
+[ext_resource type="Script" uid="uid://crb6uyvje3yvr" path="res://Script/player.gd" id="3_pbin4"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mvx6v"]
+radius = 60.0
+height = 262.0
+
 [node name="Node2D" type="Node2D" unique_id=408575487]
+script = ExtResource("1_shn0w")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=327261919]
+position = Vector2(577.00006, 324.5)
+scale = Vector2(0.9203824, 0.9234043)
+texture = ExtResource("1_0lxte")
+
+[node name="Items" type="Node2D" parent="." unique_id=774316667]
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1899640187]
+script = ExtResource("3_pbin4")
+
+[node name="Sprite2D" type="Sprite2D" parent="Area2D" unique_id=1804971241]
+position = Vector2(571, 507)
+scale = Vector2(1.7051888, 1.6290613)
+texture = ExtResource("2_shn0w")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=417797117]
+position = Vector2(570, 521)
+shape = SubResource("CapsuleShape2D_mvx6v")
+
+[node name="ScoreLabel" type="Label" parent="." unique_id=1951401978]
+offset_left = 950.0
+offset_top = 30.0
+offset_right = 1115.0
+offset_bottom = 75.0
+theme_override_colors/font_color = Color(0.83075786, 0, 0.16394386, 1)
+theme_override_font_sizes/font_size = 32
+text = "Score : 100"
+
+[connection signal="area_entered" from="Area2D" to="Area2D" method="_on_area_entered"]

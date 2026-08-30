@@ -46,4 +46,4 @@ func _on_paham_pressed() -> void:
 	await tween.finished
 
 	# Baru pindah scene
-	get_tree().change_scene_to_file("res://NAMA_SCENE_GAME.tscn")
+	get_tree().change_scene_to_file("res://Scene/gameplay.tscn")

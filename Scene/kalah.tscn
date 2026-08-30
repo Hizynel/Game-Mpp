@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://tb1rnp8i57wl"]
+
+[ext_resource type="Texture2D" uid="uid://b8t6hhrpmd0cm" path="res://Asset Game/kalah.jpg" id="1_7wvl3"]
+
+[node name="Node2D" type="Node2D" unique_id=1224648705]
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=971601864]
+offset_right = 1156.0
+offset_bottom = 650.0
+texture = ExtResource("1_7wvl3")

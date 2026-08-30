@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ct0wv0lmdhm2x"]
 
-[ext_resource type="Script" uid="uid://dmmne16ibr4" path="res://Scene/username.gd" id="1_kd28b"]
+[ext_resource type="Script" uid="uid://dmmne16ibr4" path="res://Script/username.gd" id="1_kd28b"]
 [ext_resource type="Texture2D" uid="uid://qhel7hbbjhlx" path="res://Asset Game/bg.jpeg" id="1_lmumk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_woch1"]

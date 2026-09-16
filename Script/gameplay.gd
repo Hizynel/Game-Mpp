@@ -262,18 +262,18 @@ func end_game():
 
 
 	# Penentuan kalah/menang baru diproses saat timer 60 detik selesai
-	if score <= 0:
+	if score >= 10:
 
 		get_tree().change_scene_to_file(
-			"res://Scene/kalah.tscn"
+			"res://Scene/bintang-1.tscn"
 		)
 
 
 	# Score kurang dari 70
-	elif score < 70:
+	elif score >= 150:
 
 		get_tree().change_scene_to_file(
-			"res://Scene/coba_lagi.tscn"
+			"res://Scene/bintang-2.tscn"
 		)
 
 
@@ -281,7 +281,7 @@ func end_game():
 	else:
 
 		get_tree().change_scene_to_file(
-			"res://Scene/menang.tscn"
+			"res://Scene/bintang-3.tscn"
 		)
 
 

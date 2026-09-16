@@ -1,7 +1,8 @@
 extends Control
 @onready var video_player: VideoStreamPlayer = $VideoStreamPlayer
-@onready var start_button: Button = $Button
-@onready var quit_button: Button = $Button2
+@onready var start_button: TextureButton = $Button
+@onready var quit_button: TextureButton = $Button2
+@onready var logo: Sprite2D = $Logo
 
 func _ready() -> void:
 	video_player.finished.connect(_on_video_finished)
@@ -15,6 +16,7 @@ func _fade_in() -> void:
 func _on_button_pressed() -> void:
 	start_button.hide()
 	quit_button.hide()
+	logo.hide()
 	video_player.play()
 
 func _on_video_finished() -> void:

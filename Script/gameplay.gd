@@ -153,13 +153,15 @@ func spawn_item():
 
 
 # =========================
-# ADD SCORE + COMBO
+# ADD SCORE + COMBO (barang BENER)
 # =========================
 
 func add_score(amount: int):
 
 	if game_over:
 		return
+
+	$BarangBener.play()
 
 	# Tambah combo
 	combo += 1
@@ -208,13 +210,15 @@ func add_score(amount: int):
 
 
 # =========================
-# BAD ITEM
-# =========================
+# BAD ITEM (barang SALAH)
+# ================6=========
 
 func subtract_score(amount: int):
 
 	if game_over:
 		return
+
+	$BarangSalah.play()
 
 	# Reset combo ke 0 saat menabrak item buruk
 	combo = 0
@@ -254,36 +258,16 @@ func update_combo_label():
 # =========================
 
 func end_game():
-
 	if game_over:
 		return
-
 	game_over = true
 
-
-	# Penentuan kalah/menang baru diproses saat timer 60 detik selesai
-	if score >= 10:
-
-		get_tree().change_scene_to_file(
-			"res://Scene/bintang-1.tscn"
-		)
-
-
-	# Score kurang dari 70
-	elif score >= 150:
-
-		get_tree().change_scene_to_file(
-			"res://Scene/bintang-2.tscn"
-		)
-
-
-	# Score 70 atau lebih
+	if score >= 150:
+		get_tree().change_scene_to_file("res://Scene/bintang-3.tscn")
+	elif score >= 10:
+		get_tree().change_scene_to_file("res://Scene/bintang-2.tscn")
 	else:
-
-		get_tree().change_scene_to_file(
-			"res://Scene/bintang-3.tscn"
-		)
-
+		get_tree().change_scene_to_file("res://Scene/bintang-1.tscn")
 
 # =========================
 # DEBUG CLICK

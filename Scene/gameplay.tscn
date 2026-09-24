@@ -5,6 +5,9 @@
 [ext_resource type="Texture2D" uid="uid://b0bs2rytn2v33" path="res://Asset Game/orang-removebg-preview.png" id="2_shn0w"]
 [ext_resource type="Script" uid="uid://crb6uyvje3yvr" path="res://Script/player.gd" id="3_pbin4"]
 [ext_resource type="Texture2D" uid="uid://ck5kpsmgoo1wf" path="res://Icon/lope.png" id="5_pbin4"]
+[ext_resource type="AudioStream" uid="uid://b2qhgwvt1gcha" path="res://music/gameplay.ogg" id="6_0qtgj"]
+[ext_resource type="AudioStream" uid="uid://clmhtk2p0qui4" path="res://music/barangsalah.ogg" id="7_ok2uq"]
+[ext_resource type="AudioStream" uid="uid://cjpqt17qehh61" path="res://music/barangbener.ogg" id="8_6vyxd"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mvx6v"]
 radius = 60.0
@@ -52,8 +55,18 @@ text = "100"
 
 [node name="Lope" type="Sprite2D" parent="." unique_id=347619076]
 z_index = 1
-position = Vector2(1061.2498, 93.31249)
+position = Vector2(1056.2499, 93.312485)
 scale = Vector2(0.54879886, 0.5796667)
 texture = ExtResource("5_pbin4")
+
+[node name="BGM" type="AudioStreamPlayer2D" parent="." unique_id=415927961]
+stream = ExtResource("6_0qtgj")
+autoplay = true
+
+[node name="BarangSalah" type="AudioStreamPlayer2D" parent="." unique_id=2068411597]
+stream = ExtResource("7_ok2uq")
+
+[node name="BarangBener" type="AudioStreamPlayer2D" parent="." unique_id=42717449]
+stream = ExtResource("8_6vyxd")
 
 [connection signal="area_entered" from="Area2D" to="Area2D" method="_on_area_entered"]

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dmmne16ibr4" path="res://Script/username.gd" id="1_kd28b"]
 [ext_resource type="Texture2D" uid="uid://qhel7hbbjhlx" path="res://Asset Game/bg.jpeg" id="1_lmumk"]
+[ext_resource type="AudioStream" uid="uid://7ia1mrr4t33c" path="res://music/username.ogg" id="3_po3fh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_woch1"]
 content_margin_left = 12.0
@@ -183,3 +184,7 @@ theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_vrqxc")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_7mipf")
 theme_override_styles/focus = SubResource("StyleBoxFlat_8besb")
 text = "Lanjut"
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1693665674]
+stream = ExtResource("3_po3fh")
+autoplay = true

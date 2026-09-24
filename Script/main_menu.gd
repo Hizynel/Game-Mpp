@@ -3,6 +3,7 @@ extends Control
 @onready var start_button: TextureButton = $Button
 @onready var quit_button: TextureButton = $Button2
 @onready var logo: Sprite2D = $Logo
+@onready var click_sound: AudioStreamPlayer2D = $Button/click_sound
 
 func _ready() -> void:
 	video_player.finished.connect(_on_video_finished)
@@ -14,6 +15,7 @@ func _fade_in() -> void:
 	tween.tween_property(self, "modulate", Color.WHITE, 1.5).set_trans(Tween.TRANS_SINE)
 
 func _on_button_pressed() -> void:
+	click_sound.play()
 	start_button.hide()
 	quit_button.hide()
 	logo.hide()
@@ -23,4 +25,5 @@ func _on_video_finished() -> void:
 	get_tree().change_scene_to_file("res://Scene/tutorial.tscn")
 
 func _on_button_2_pressed() -> void:
+	click_sound.play()
 	get_tree().quit()

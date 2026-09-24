@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://clsso2x3djq1x" path="res://Asset Game/gerbang.jpeg" id="2_hii65"]
 [ext_resource type="VideoStream" uid="uid://ds4521k6vanje" path="res://Asset Game/gerbang-buka.ogv" id="3_kqsxi"]
 [ext_resource type="Texture2D" uid="uid://be32lxqe71hn0" path="res://Asset Game/start.png" id="4_kqsxi"]
+[ext_resource type="AudioStream" uid="uid://bvburcv2uh6b1" path="res://music/tombol_mulai.ogg" id="5_oqads"]
 [ext_resource type="Texture2D" uid="uid://dle7bs411tfhw" path="res://Asset Game/quit.png" id="5_pvidh"]
 [ext_resource type="Texture2D" uid="uid://brycqfust68wd" path="res://Asset Game/logo.png" id="6_hptlk"]
 
@@ -43,6 +44,9 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.12, 0.12)
 texture_normal = ExtResource("4_kqsxi")
+
+[node name="click_sound" type="AudioStreamPlayer2D" parent="Button" unique_id=1622496273]
+stream = ExtResource("5_oqads")
 
 [node name="Button2" type="TextureButton" parent="." unique_id=1043073850]
 layout_mode = 1

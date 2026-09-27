@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ct0wv0lmdhm2x"]
 
 [ext_resource type="Script" uid="uid://dmmne16ibr4" path="res://Script/username.gd" id="1_kd28b"]
-[ext_resource type="Texture2D" uid="uid://qhel7hbbjhlx" path="res://Asset Game/bg.jpeg" id="1_lmumk"]
+[ext_resource type="Texture2D" uid="uid://b5vobe6mf88xr" path="res://Asset Game/Background.png" id="2_po3fh"]
 [ext_resource type="AudioStream" uid="uid://7ia1mrr4t33c" path="res://music/username.ogg" id="3_po3fh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_woch1"]
@@ -118,17 +118,17 @@ grow_vertical = 2
 script = ExtResource("1_kd28b")
 
 [node name="Bg" type="Sprite2D" parent="." unique_id=1293210938]
-position = Vector2(576.25, 324)
-scale = Vector2(0.84370434, 0.84375006)
-texture = ExtResource("1_lmumk")
+position = Vector2(960.50006, 540.49994)
+scale = Vector2(1.0015626, 1.0027778)
+texture = ExtResource("2_po3fh")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1211553238]
 z_index = 1
 layout_mode = 0
-offset_left = 385.0
-offset_top = 223.0
-offset_right = 756.0
-offset_bottom = 454.0
+offset_left = 600.0
+offset_top = 508.0
+offset_right = 1320.0
+offset_bottom = 780.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_woch1")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=26608896]
@@ -140,7 +140,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.99705297, 0.99705297, 0.99705297, 1)
 theme_override_fonts/font = SubResource("FontVariation_wi7m3")
 theme_override_font_sizes/font_size = 20
-text = "Siapa nama kamu?"
+text = "Who You Are?"
 horizontal_alignment = 1
 
 [node name="UsernameInput" type="LineEdit" parent="PanelContainer/VBoxContainer" unique_id=1362285195]
@@ -155,16 +155,16 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = SubResource("FontVariation_acybq")
 theme_override_font_sizes/font_size = 20
-text = "Silakan ketik nama kamu agar kami mengenal kamu"
+text = "Ketika Nama Atau Username Kamu Di Atas"
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="Panel" type="Panel" parent="." unique_id=1752135869]
 layout_mode = 0
-offset_left = 417.0
-offset_top = 327.0
-offset_right = 730.0
-offset_bottom = 496.0
+offset_left = 809.0
+offset_top = 649.0
+offset_right = 1122.0
+offset_bottom = 818.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_eweqo")
 
 [node name="LanjutButton" type="Button" parent="Panel" unique_id=544795118]
@@ -172,9 +172,9 @@ z_index = 1
 custom_minimum_size = Vector2(0, 45)
 layout_mode = 0
 offset_left = 38.0
-offset_top = 86.0
+offset_top = 77.0
 offset_right = 277.0
-offset_bottom = 157.0
+offset_bottom = 148.0
 theme_override_fonts/font = SubResource("FontVariation_kd28b")
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxFlat_3xska")

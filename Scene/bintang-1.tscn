@@ -1,10 +1,103 @@
 [gd_scene format=3 uid="uid://tb1rnp8i57wl"]
 
-[ext_resource type="Texture2D" uid="uid://b8t6hhrpmd0cm" path="res://Asset Game/kalah.jpg" id="1_7wvl3"]
+[ext_resource type="Texture2D" uid="uid://b5vobe6mf88xr" path="res://Asset Game/Background.png" id="1_8y8yp"]
+[ext_resource type="Texture2D" uid="uid://ckoskhwd8o1kc" path="res://Asset Game/Screenshot_20260927_152553-removebg-preview.png" id="2_ke8yv"]
+[ext_resource type="Texture2D" uid="uid://b7d0iw07a0rad" path="res://Asset Game/Screenshot_20260927_154922-removebg-preview.png" id="3_ablb1"]
+[ext_resource type="Texture2D" uid="uid://brd27arte3l2i" path="res://Asset Game/Screenshot_20260927_155226-removebg-preview.png" id="4_3onvn"]
 
-[node name="Node2D" type="Node2D" unique_id=1224648705]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mvx6v"]
+bg_color = Color(0.95686275, 0.91764706, 0.8235294, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jopsx"]
+bg_color = Color(0.81960785, 0.74509805, 0.5568628, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72156864, 0.5647059, 0.32156864, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="StarUI" type="Control" unique_id=863457792]
+layout_mode = 3
+anchors_preset = 0
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=971601864]
+modulate = Color(0.556953, 0.556953, 0.556953, 1)
+layout_mode = 0
 offset_right = 1156.0
 offset_bottom = 650.0
-texture = ExtResource("1_7wvl3")
+texture = ExtResource("1_8y8yp")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1045119624]
+layout_mode = 0
+offset_left = 745.0
+offset_top = 441.0
+offset_right = 1175.0
+offset_bottom = 787.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_mvx6v")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=2016884803]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=953563790]
+layout_mode = 2
+
+[node name="PanelContainer2" type="PanelContainer" parent="." unique_id=1646109577]
+layout_mode = 0
+offset_left = 748.0
+offset_top = 545.0
+offset_right = 1172.0
+offset_bottom = 598.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_jopsx")
+
+[node name="Label" type="Label" parent="PanelContainer2" unique_id=933918338]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8784314, 0.1254902, 0.1254902, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 25
+text = "YAH, MASIH KURANG DISIPLIN! COBA LAGI DAN PERHATIKAN ATURAN SEKOLAH!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Star" type="TextureRect" parent="." unique_id=1904473946]
+layout_mode = 0
+offset_left = 894.0
+offset_top = 428.0
+offset_right = 1025.0
+offset_bottom = 558.0
+texture = ExtResource("2_ke8yv")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Star" unique_id=1618058735]
+layout_mode = 0
+offset_left = -62.0
+offset_top = 232.0
+offset_right = 215.0
+offset_bottom = 298.0
+
+[node name="TextureButton" type="TextureButton" parent="Star/HBoxContainer" unique_id=1021534296]
+layout_mode = 2
+texture_normal = ExtResource("3_ablb1")
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Star" unique_id=514466081]
+layout_mode = 0
+offset_left = -60.0
+offset_top = 284.0
+offset_right = 171.0
+offset_bottom = 359.0
+
+[node name="TextureButton2" type="TextureButton" parent="Star/HBoxContainer2" unique_id=190561544]
+layout_mode = 2
+texture_normal = ExtResource("4_3onvn")

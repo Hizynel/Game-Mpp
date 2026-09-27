@@ -1,12 +1,13 @@
 [gd_scene format=3 uid="uid://kqsfealam1wk"]
 
 [ext_resource type="Script" uid="uid://dkq73doupxxy8" path="res://Script/main_menu.gd" id="1_kqsxi"]
-[ext_resource type="Texture2D" uid="uid://clsso2x3djq1x" path="res://Asset Game/gerbang.jpeg" id="2_hii65"]
-[ext_resource type="VideoStream" uid="uid://ds4521k6vanje" path="res://Asset Game/gerbang-buka.ogv" id="3_kqsxi"]
-[ext_resource type="Texture2D" uid="uid://be32lxqe71hn0" path="res://Asset Game/start.png" id="4_kqsxi"]
+[ext_resource type="Texture2D" uid="uid://b5vobe6mf88xr" path="res://Asset Game/Background.png" id="2_s2f1d"]
+[ext_resource type="Texture2D" uid="uid://1auesryb851l" path="res://Asset Game/Screenshot_20260927_143406-removebg-preview.png" id="3_ejkra"]
+[ext_resource type="VideoStream" uid="uid://bk58dn6wgoxpu" path="res://Asset Game/GERBANG-_60E86E2_.ogv" id="4_s2f1d"]
 [ext_resource type="AudioStream" uid="uid://bvburcv2uh6b1" path="res://music/tombol_mulai.ogg" id="5_oqads"]
-[ext_resource type="Texture2D" uid="uid://dle7bs411tfhw" path="res://Asset Game/quit.png" id="5_pvidh"]
-[ext_resource type="Texture2D" uid="uid://brycqfust68wd" path="res://Asset Game/logo.png" id="6_hptlk"]
+[ext_resource type="Texture2D" uid="uid://ey7kyet6q8ck" path="res://Asset Game/Screenshot_20260927_144153-removebg-preview.png" id="5_yok32"]
+[ext_resource type="Texture2D" uid="uid://26k3nedfgtgc" path="res://Asset Game/Screenshot_20260927_145011-removebg-preview.png" id="7_klvvj"]
+[ext_resource type="Texture2D" uid="uid://hj1bfj3em65b" path="res://Asset Game/Screenshot_20260927_145457-removebg-preview.png" id="8_47k5r"]
 
 [node name="MainMenu" type="Control" unique_id=868788955]
 layout_mode = 3
@@ -18,15 +19,20 @@ grow_vertical = 2
 script = ExtResource("1_kqsxi")
 
 [node name="bg" type="Sprite2D" parent="." unique_id=2100253725]
-position = Vector2(575, 323.49997)
-scale = Vector2(0.8506589, 0.85286456)
-texture = ExtResource("2_hii65")
+position = Vector2(960.9999, 540.99994)
+scale = Vector2(1.0031248, 1.0037037)
+texture = ExtResource("2_s2f1d")
+
+[node name="Logo" type="Sprite2D" parent="." unique_id=176374017]
+position = Vector2(989, 299)
+scale = Vector2(0.9467188, 1.1118542)
+texture = ExtResource("3_ejkra")
 
 [node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="." unique_id=1540652757]
 layout_mode = 0
-offset_right = 1152.0
-offset_bottom = 648.0
-stream = ExtResource("3_kqsxi")
+offset_right = 1920.0
+offset_bottom = 1080.0
+stream = ExtResource("4_s2f1d")
 expand = true
 
 [node name="Button" type="TextureButton" parent="." unique_id=1495575181]
@@ -36,14 +42,14 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -294.0
-offset_top = 133.0
-offset_right = 1626.0
-offset_bottom = 1213.0
+offset_left = -214.0
+offset_top = 165.0
+offset_right = 69.0
+offset_bottom = 253.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.12, 0.12)
-texture_normal = ExtResource("4_kqsxi")
+scale = Vector2(1.5, 1.5)
+texture_normal = ExtResource("5_yok32")
 
 [node name="click_sound" type="AudioStreamPlayer2D" parent="Button" unique_id=1622496273]
 stream = ExtResource("5_oqads")
@@ -55,18 +61,22 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 46.00006
-offset_top = 134.00003
-offset_right = 1966.0
-offset_bottom = 1214.0
+offset_left = -194.0
+offset_top = 396.00006
+offset_right = 89.0
+offset_bottom = 484.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.12, 0.12)
-texture_normal = ExtResource("5_pvidh")
+scale = Vector2(1.5, 1.5)
+texture_normal = ExtResource("7_klvvj")
 
-[node name="Logo" type="Sprite2D" parent="." unique_id=176374017]
-position = Vector2(564, 238.00003)
-scale = Vector2(0.42280072, 0.43730074)
-texture = ExtResource("6_hptlk")
+[node name="Button3" type="TextureButton" parent="." unique_id=334270605]
+layout_mode = 0
+offset_left = 652.0
+offset_top = 815.0
+offset_right = 1077.0
+offset_bottom = 903.0
+scale = Vector2(1.5, 1.5)
+texture_normal = ExtResource("8_47k5r")
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

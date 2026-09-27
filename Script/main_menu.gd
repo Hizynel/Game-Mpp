@@ -2,6 +2,7 @@ extends Control
 @onready var video_player: VideoStreamPlayer = $VideoStreamPlayer
 @onready var start_button: TextureButton = $Button
 @onready var quit_button: TextureButton = $Button2
+@onready var peringkat_button: TextureButton = $Button3
 @onready var logo: Sprite2D = $Logo
 @onready var click_sound: AudioStreamPlayer2D = $Button/click_sound
 
@@ -18,6 +19,7 @@ func _on_button_pressed() -> void:
 	click_sound.play()
 	start_button.hide()
 	quit_button.hide()
+	peringkat_button.hide()
 	logo.hide()
 	video_player.play()
 

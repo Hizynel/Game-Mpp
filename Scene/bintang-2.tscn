@@ -44,29 +44,37 @@ offset_right = 1156.0
 offset_bottom = 650.0
 texture = ExtResource("1_dbldt")
 
-[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1282443826]
+[node name="Control" type="Control" parent="." unique_id=616509115]
+anchors_preset = 0
+offset_left = 675.0
+offset_top = 315.0
+offset_right = 1130.3846
+offset_bottom = 681.9231
+scale = Vector2(1.3, 1.3)
+
+[node name="PanelContainer" type="PanelContainer" parent="Control" unique_id=1282443826]
 layout_mode = 0
-offset_left = 745.0
-offset_top = 441.0
-offset_right = 1175.0
-offset_bottom = 787.0
+offset_left = -3.0
+offset_top = -3.0
+offset_right = 456.0
+offset_bottom = 365.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_txbnc")
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=1307969378]
+[node name="MarginContainer" type="MarginContainer" parent="Control/PanelContainer" unique_id=1307969378]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=1800484173]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/PanelContainer/MarginContainer" unique_id=1800484173]
 layout_mode = 2
 
-[node name="PanelContainer2" type="PanelContainer" parent="." unique_id=363550619]
+[node name="PanelContainer2" type="PanelContainer" parent="Control" unique_id=363550619]
 layout_mode = 0
-offset_left = 748.0
-offset_top = 545.0
-offset_right = 1172.0
-offset_bottom = 598.0
+offset_left = 13.0
+offset_top = 121.0
+offset_right = 437.0
+offset_bottom = 236.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_d8jqw")
 
-[node name="Label" type="Label" parent="PanelContainer2" unique_id=428918741]
+[node name="Label" type="Label" parent="Control/PanelContainer2" unique_id=428918741]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8784314, 0.1254902, 0.1254902, 1)
 theme_override_constants/shadow_offset_x = 2
@@ -76,40 +84,40 @@ text = "YAH, MASIH KURANG DISIPLIN! COBA LAGI DAN PERHATIKAN ATURAN SEKOLAH!"
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="." unique_id=130703235]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Control" unique_id=130703235]
 layout_mode = 0
-offset_left = 834.0
-offset_top = 712.0
-offset_right = 1065.0
-offset_bottom = 787.0
+offset_left = 99.0
+offset_top = 288.0
+offset_right = 330.0
+offset_bottom = 363.0
 
-[node name="TextureButton2" type="TextureButton" parent="HBoxContainer2" unique_id=1404749520]
+[node name="TextureButton2" type="TextureButton" parent="Control/HBoxContainer2" unique_id=1404749520]
 layout_mode = 2
 texture_normal = ExtResource("2_x5o44")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1634664252]
+[node name="HBoxContainer" type="HBoxContainer" parent="Control" unique_id=1634664252]
 layout_mode = 0
-offset_left = 832.0
-offset_top = 660.0
-offset_right = 1109.0
-offset_bottom = 726.0
+offset_left = 97.0
+offset_top = 236.0
+offset_right = 374.0
+offset_bottom = 302.0
 
-[node name="TextureButton" type="TextureButton" parent="HBoxContainer" unique_id=1361204206]
+[node name="TextureButton" type="TextureButton" parent="Control/HBoxContainer" unique_id=1361204206]
 layout_mode = 2
 texture_normal = ExtResource("3_fvemj")
 
-[node name="Star3" type="TextureRect" parent="." unique_id=1876305454]
+[node name="Star3" type="TextureRect" parent="Control" unique_id=1876305454]
 layout_mode = 0
-offset_left = 994.0
-offset_top = 428.0
-offset_right = 1125.0
-offset_bottom = 558.0
+offset_left = 210.53845
+offset_top = -6.7692413
+offset_right = 341.53845
+offset_bottom = 123.23076
 texture = ExtResource("4_y0g1r")
 
-[node name="Star2" type="TextureRect" parent="." unique_id=1272671501]
+[node name="Star2" type="TextureRect" parent="Control" unique_id=1272671501]
 layout_mode = 0
-offset_left = 794.0
-offset_top = 428.0
-offset_right = 925.0
-offset_bottom = 558.0
+offset_left = 111.30768
+offset_top = -6.7692413
+offset_right = 242.30768
+offset_bottom = 123.23076
 texture = ExtResource("4_y0g1r")

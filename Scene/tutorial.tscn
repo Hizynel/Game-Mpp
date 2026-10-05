@@ -28,16 +28,16 @@ script = ExtResource("1_yb1ct")
 
 [node name="BgTuto" type="Sprite2D" parent="." unique_id=2055580635]
 modulate = Color(0.3527338, 0.36917683, 0.34457043, 1)
-position = Vector2(573, 325)
-scale = Vector2(0.60052085, 0.6)
+position = Vector2(958.25, 540.5)
+scale = Vector2(1.0018228, 0.9990741)
 texture = ExtResource("2_ehuit")
 
 [node name="ButtonMengerti" type="Button" parent="." unique_id=779905405]
 layout_mode = 0
-offset_left = 740.0
-offset_top = 405.0
-offset_right = 1012.0
-offset_bottom = 492.0
+offset_left = 1116.0
+offset_top = 723.0
+offset_right = 1388.0
+offset_bottom = 810.0
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = ExtResource("3_ehuit")
 theme_override_styles/hover = ExtResource("3_ehuit")
@@ -46,10 +46,10 @@ text = "Mengerti"
 [node name="Label" type="Label" parent="." unique_id=822055720]
 custom_minimum_size = Vector2(600, 0)
 layout_mode = 0
-offset_left = 150.0
-offset_top = 88.0
-offset_right = 1015.0
-offset_bottom = 375.0
+offset_left = 526.0
+offset_top = 406.0
+offset_right = 1391.0
+offset_bottom = 693.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 30

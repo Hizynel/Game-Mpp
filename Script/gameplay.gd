@@ -8,9 +8,9 @@ extends Node2D
 var item_scene = preload("res://Scene/Items.tscn")
 
 var lanes = [
-	-100.0,
-	430.0,
-	980.0
+	160.0,
+	913.0,
+	1491.0
 ]
 
 
@@ -30,8 +30,10 @@ var end_max_delay := 1.5
 
 var next_spawn_delay := 0.0
 
-# 50% kemungkinan item baik, 50% item terlarang (Seimbang)
-var good_chance := 0.6
+# Jumlah item baik & salah yang fix
+var total_good := 10
+var total_bad := 10
+var item_pool: Array = []
 
 
 # =========================
@@ -39,7 +41,7 @@ var good_chance := 0.6
 # =========================
 
 var score := 0
-var max_score := 999
+var max_score := 500
 
 var game_time_limit := 60.0
 var game_timer := 0.0
@@ -63,6 +65,8 @@ func _ready():
 
 	randomize()
 
+	_build_item_pool()
+
 	update_score_label()
 	update_combo_label()
 
@@ -70,6 +74,22 @@ func _ready():
 		start_min_delay,
 		start_max_delay
 	)
+
+
+# =========================
+# BIKIN POOL ITEM (10 baik + 10 salah, diacak)
+# =========================
+
+func _build_item_pool():
+	item_pool.clear()
+
+	for i in range(total_good):
+		item_pool.append(true)
+
+	for i in range(total_bad):
+		item_pool.append(false)
+
+	item_pool.shuffle()
 
 
 # =========================
@@ -130,6 +150,10 @@ func _process(delta):
 
 func spawn_item():
 
+	# Kalau pool udah abis (20 item udah ke-spawn semua), ga spawn lagi
+	if item_pool.is_empty():
+		return
+
 	# Pilih lane secara random
 	var chosen_lane = randi() % lanes.size()
 
@@ -141,12 +165,12 @@ func spawn_item():
 
 	# Posisi awal item
 	item.position = Vector2(
-		563,
-		288
+		943,
+		482
 	)
 
-	# Menentukan item baik / buruk (50:50)
-	item.is_good = randf() < good_chance
+	# Ambil 1 item dari pool (udah diacak dari awal)
+	item.is_good = item_pool.pop_front()
 
 	# Masukkan item ke node Items
 	$Items.add_child(item)
@@ -211,7 +235,7 @@ func add_score(amount: int):
 
 # =========================
 # BAD ITEM (barang SALAH)
-# ================6=========
+# =========================
 
 func subtract_score(amount: int):
 

@@ -44,29 +44,36 @@ offset_right = 1156.0
 offset_bottom = 650.0
 texture = ExtResource("1_dromr")
 
-[node name="PanelContainer" type="PanelContainer" parent="." unique_id=958575568]
+[node name="Control" type="Control" parent="." unique_id=199216928]
+anchors_preset = 0
+offset_left = 683.0
+offset_top = 345.0
+offset_right = 1105.3077
+offset_bottom = 682.6923
+scale = Vector2(1.3, 1.3)
+
+[node name="PanelContainer" type="PanelContainer" parent="Control" unique_id=958575568]
 layout_mode = 0
-offset_left = 745.0
-offset_top = 441.0
-offset_right = 1175.0
-offset_bottom = 787.0
+offset_left = -15.3845825
+offset_top = -26.15387
+offset_right = 434.61548
+offset_bottom = 351.53845
 theme_override_styles/panel = SubResource("StyleBoxFlat_ksoiq")
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=1620885708]
+[node name="MarginContainer" type="MarginContainer" parent="Control/PanelContainer" unique_id=1620885708]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=687425908]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/PanelContainer/MarginContainer" unique_id=687425908]
 layout_mode = 2
 
-[node name="PanelContainer2" type="PanelContainer" parent="." unique_id=1553709322]
+[node name="PanelContainer2" type="PanelContainer" parent="Control" unique_id=1553709322]
 layout_mode = 0
-offset_left = 748.0
-offset_top = 545.0
-offset_right = 1172.0
-offset_bottom = 598.0
+offset_top = 101.0
+offset_right = 424.0
+offset_bottom = 216.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_syxet")
 
-[node name="Label" type="Label" parent="PanelContainer2" unique_id=461159897]
+[node name="Label" type="Label" parent="Control/PanelContainer2" unique_id=461159897]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8784314, 0.1254902, 0.1254902, 1)
 theme_override_constants/shadow_offset_x = 2
@@ -76,48 +83,48 @@ text = "YAH, MASIH KURANG DISIPLIN! COBA LAGI DAN PERHATIKAN ATURAN SEKOLAH!"
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="." unique_id=1480443348]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Control" unique_id=1480443348]
 layout_mode = 0
-offset_left = 834.0
-offset_top = 712.0
-offset_right = 1065.0
-offset_bottom = 787.0
+offset_left = 86.0
+offset_top = 268.0
+offset_right = 317.0
+offset_bottom = 343.0
 
-[node name="TextureButton2" type="TextureButton" parent="HBoxContainer2" unique_id=1494316732]
+[node name="TextureButton2" type="TextureButton" parent="Control/HBoxContainer2" unique_id=1494316732]
 layout_mode = 2
 texture_normal = ExtResource("2_31day")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=427965591]
+[node name="HBoxContainer" type="HBoxContainer" parent="Control" unique_id=427965591]
 layout_mode = 0
-offset_left = 832.0
-offset_top = 660.0
-offset_right = 1109.0
-offset_bottom = 726.0
+offset_left = 84.0
+offset_top = 216.0
+offset_right = 361.0
+offset_bottom = 282.0
 
-[node name="TextureButton" type="TextureButton" parent="HBoxContainer" unique_id=1558939494]
+[node name="TextureButton" type="TextureButton" parent="Control/HBoxContainer" unique_id=1558939494]
 layout_mode = 2
 texture_normal = ExtResource("3_2h4cs")
 
-[node name="Star" type="TextureRect" parent="." unique_id=1594742004]
+[node name="Star" type="TextureRect" parent="Control" unique_id=1594742004]
 layout_mode = 0
-offset_left = 894.0
-offset_top = 428.0
-offset_right = 1025.0
-offset_bottom = 558.0
+offset_left = 150.76924
+offset_top = -30.000011
+offset_right = 281.76923
+offset_bottom = 99.999985
 texture = ExtResource("4_ma7e6")
 
-[node name="Star3" type="TextureRect" parent="." unique_id=2089130286]
+[node name="Star3" type="TextureRect" parent="Control" unique_id=2089130286]
 layout_mode = 0
-offset_left = 994.0
-offset_top = 428.0
-offset_right = 1125.0
-offset_bottom = 558.0
+offset_left = 250.76924
+offset_top = -30.000011
+offset_right = 381.76923
+offset_bottom = 99.999985
 texture = ExtResource("4_ma7e6")
 
-[node name="Star2" type="TextureRect" parent="." unique_id=1882240719]
+[node name="Star2" type="TextureRect" parent="Control" unique_id=1882240719]
 layout_mode = 0
-offset_left = 794.0
-offset_top = 428.0
-offset_right = 925.0
-offset_bottom = 558.0
+offset_left = 50.76924
+offset_top = -30.000011
+offset_right = 181.76924
+offset_bottom = 99.999985
 texture = ExtResource("4_ma7e6")

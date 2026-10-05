@@ -1,7 +1,7 @@
 extends Area2D
 @export var speed := 0.3
 var depth := 0.0
-var start_x := 563.0
+var start_x := 943.0
 var target_x := 563.0
 var is_good := true
 
@@ -44,7 +44,7 @@ func _process(delta):
 	var ukuran = lerp(0.08, 2.0, eased_depth)
 	scale = Vector2(ukuran, ukuran)
 
-	var base_y = lerp(234.0, 587.0, eased_depth)
+	var base_y = lerp(459.0, 990.0, eased_depth)
 	position.y = base_y + sin(time_alive * bob_speed) * bob_amount * ukuran
 	position.x = lerp(start_x, target_x, eased_depth)
 

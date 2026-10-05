@@ -19,8 +19,8 @@ grow_vertical = 2
 script = ExtResource("1_kqsxi")
 
 [node name="bg" type="Sprite2D" parent="." unique_id=2100253725]
-position = Vector2(960.9999, 540.99994)
-scale = Vector2(1.0031248, 1.0037037)
+position = Vector2(959, 539.49994)
+scale = Vector2(1.0010417, 1.000926)
 texture = ExtResource("2_s2f1d")
 
 [node name="Logo" type="Sprite2D" parent="." unique_id=176374017]
@@ -42,10 +42,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -214.0
-offset_top = 165.0
-offset_right = 69.0
-offset_bottom = 253.0
+offset_left = -212.0
+offset_top = 77.0
+offset_right = 71.0
+offset_bottom = 165.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.5, 1.5)
@@ -61,10 +61,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -194.0
-offset_top = 396.00006
-offset_right = 89.0
-offset_bottom = 484.0
+offset_left = -192.0
+offset_top = 308.0
+offset_right = 91.0
+offset_bottom = 396.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.5, 1.5)
@@ -72,10 +72,10 @@ texture_normal = ExtResource("7_klvvj")
 
 [node name="Button3" type="TextureButton" parent="." unique_id=334270605]
 layout_mode = 0
-offset_left = 652.0
-offset_top = 815.0
-offset_right = 1077.0
-offset_bottom = 903.0
+offset_left = 654.0
+offset_top = 727.0
+offset_right = 1079.0
+offset_bottom = 815.0
 scale = Vector2(1.5, 1.5)
 texture_normal = ExtResource("8_47k5r")
 

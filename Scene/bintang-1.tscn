@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://ckoskhwd8o1kc" path="res://Asset Game/Screenshot_20260927_152553-removebg-preview.png" id="2_ke8yv"]
 [ext_resource type="Texture2D" uid="uid://b7d0iw07a0rad" path="res://Asset Game/Screenshot_20260927_154922-removebg-preview.png" id="3_ablb1"]
 [ext_resource type="Texture2D" uid="uid://brd27arte3l2i" path="res://Asset Game/Screenshot_20260927_155226-removebg-preview.png" id="4_3onvn"]
+[ext_resource type="Script" path="res://Script/star_result.gd" id="5_star"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mvx6v"]
 bg_color = Color(0.95686275, 0.91764706, 0.8235294, 1)
@@ -32,6 +33,7 @@ corner_radius_bottom_left = 20
 [node name="StarUI" type="Control" unique_id=863457792]
 layout_mode = 3
 anchors_preset = 0
+script = ExtResource("5_star")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=971601864]
 modulate = Color(0.556953, 0.556953, 0.556953, 1)

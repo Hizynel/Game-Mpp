@@ -30,8 +30,14 @@ func move_lane(direction: int) -> void:
 
 func _on_area_entered(area: Area2D) -> void:
 	if area.is_good:
-		get_parent().add_score(10)
-		show_score_popup("+20", Color(0.1, 1.0, 0.1))
+		var parent = get_parent()
+		parent.add_score(10)
+		
+		# Cek apakah 2x multiplier sedang aktif
+		if "score_multiplier" in parent and parent.score_multiplier > 1:
+			show_score_popup("+40 (2X!)", Color(1.0, 0.84, 0.0)) # Warna emas
+		else:
+			show_score_popup("+20", Color(0.1, 1.0, 0.1)) # Warna hijau normal
 	else:
 		get_parent().subtract_score(15)
 		show_score_popup("-15", Color(1.0, 0.1, 0.1))

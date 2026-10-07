@@ -14,6 +14,9 @@ func _on_lanjut_pressed():
 		return
 
 	print("Username:", username)
+	
+	# Simpan username dan ambil data koin dari database via API
+	NetworkManager.login_player(username)
 
 	lanjut_button.disabled = true
 

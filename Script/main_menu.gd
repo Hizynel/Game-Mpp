@@ -10,6 +10,8 @@ extends Control
 
 func _ready() -> void:
 	video_player.finished.connect(_on_video_finished)
+	peringkat_button.pressed.connect(_on_peringkat_pressed)
+	quit_button.pressed.connect(_on_button_2_pressed)
 	_fade_in()
 
 func _fade_in() -> void:
@@ -33,3 +35,8 @@ func _on_video_finished() -> void:
 func _on_button_2_pressed() -> void:
 	click_sound.play()
 	get_tree().quit()
+
+func _on_peringkat_pressed() -> void:
+	click_sound.play()
+	get_tree().change_scene_to_file("res://Scene/leaderboard.tscn")
+

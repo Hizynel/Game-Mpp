@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://brd27arte3l2i" path="res://Asset Game/Screenshot_20260927_155226-removebg-preview.png" id="2_31day"]
 [ext_resource type="Texture2D" uid="uid://b7d0iw07a0rad" path="res://Asset Game/Screenshot_20260927_154922-removebg-preview.png" id="3_2h4cs"]
 [ext_resource type="Texture2D" uid="uid://ckoskhwd8o1kc" path="res://Asset Game/Screenshot_20260927_152553-removebg-preview.png" id="4_ma7e6"]
+[ext_resource type="Script" uid="uid://3vvyvuwyrxrl" path="res://Script/star_result.gd" id="5_star"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ksoiq"]
 bg_color = Color(0.95686275, 0.91764706, 0.8235294, 1)
@@ -36,6 +37,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("5_star")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=233030525]
 modulate = Color(0.556953, 0.556953, 0.556953, 1)
@@ -75,11 +77,11 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_syxet")
 
 [node name="Label" type="Label" parent="Control/PanelContainer2" unique_id=461159897]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.8784314, 0.1254902, 0.1254902, 1)
+theme_override_colors/font_color = Color(0, 0.5747771, 0.31111902, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 25
-text = "YAH, MASIH KURANG DISIPLIN! COBA LAGI DAN PERHATIKAN ATURAN SEKOLAH!"
+text = "MANTAP BANGET KAMU UDAH JADI MRID PALING RAJIN KARENA TAAT PEERATURAN"
 horizontal_alignment = 1
 autowrap_mode = 2
 

@@ -3,11 +3,12 @@
 [ext_resource type="Script" uid="uid://dkq73doupxxy8" path="res://Script/main_menu.gd" id="1_kqsxi"]
 [ext_resource type="Texture2D" uid="uid://b5vobe6mf88xr" path="res://Asset Game/Background.png" id="2_s2f1d"]
 [ext_resource type="Texture2D" uid="uid://1auesryb851l" path="res://Asset Game/Screenshot_20260927_143406-removebg-preview.png" id="3_ejkra"]
-[ext_resource type="VideoStream" uid="uid://bk58dn6wgoxpu" path="res://Asset Game/GERBANG-_60E86E2_.ogv" id="4_s2f1d"]
+[ext_resource type="VideoStream" uid="uid://dsnrk0c8hraea" path="res://Asset Game/GERBANG-animasi.ogv" id="4_ejkra"]
 [ext_resource type="AudioStream" uid="uid://bvburcv2uh6b1" path="res://music/tombol_mulai.ogg" id="5_oqads"]
 [ext_resource type="Texture2D" uid="uid://ey7kyet6q8ck" path="res://Asset Game/Screenshot_20260927_144153-removebg-preview.png" id="5_yok32"]
 [ext_resource type="Texture2D" uid="uid://26k3nedfgtgc" path="res://Asset Game/Screenshot_20260927_145011-removebg-preview.png" id="7_klvvj"]
 [ext_resource type="Texture2D" uid="uid://hj1bfj3em65b" path="res://Asset Game/Screenshot_20260927_145457-removebg-preview.png" id="8_47k5r"]
+[ext_resource type="AudioStream" uid="uid://7ia1mrr4t33c" path="res://music/username.ogg" id="9_ejkra"]
 
 [node name="MainMenu" type="Control" unique_id=868788955]
 layout_mode = 3
@@ -32,7 +33,7 @@ texture = ExtResource("3_ejkra")
 layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
-stream = ExtResource("4_s2f1d")
+stream = ExtResource("4_ejkra")
 expand = true
 
 [node name="Button" type="TextureButton" parent="." unique_id=1495575181]
@@ -78,5 +79,9 @@ offset_right = 1079.0
 offset_bottom = 815.0
 scale = Vector2(1.5, 1.5)
 texture_normal = ExtResource("8_47k5r")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=2081350204]
+stream = ExtResource("9_ejkra")
+autoplay = true
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

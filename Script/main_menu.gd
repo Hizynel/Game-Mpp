@@ -5,6 +5,8 @@ extends Control
 @onready var peringkat_button: TextureButton = $Button3
 @onready var logo: Sprite2D = $Logo
 @onready var click_sound: AudioStreamPlayer2D = $Button/click_sound
+# 1. Tambahkan node lagu background kamu di sini (sesuaikan nama nodenya)
+@onready var bgm_music: AudioStreamPlayer2D = $AudioStreamPlayer2D
 
 func _ready() -> void:
 	video_player.finished.connect(_on_video_finished)
@@ -17,6 +19,8 @@ func _fade_in() -> void:
 
 func _on_button_pressed() -> void:
 	click_sound.play()
+	bgm_music.stop() # 2. Hentikan lagu pas tombol Start ditekan
+	
 	start_button.hide()
 	quit_button.hide()
 	peringkat_button.hide()

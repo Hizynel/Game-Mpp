@@ -274,7 +274,7 @@ func update_score_label():
 # =========================
 
 func update_combo_label():
-	$ComboLabel.text = "🔥 Combo: x" + str(combo)
+	$ComboLabel.text = " Combo: x" + str(combo)
 
 
 # =========================
@@ -286,9 +286,9 @@ func end_game():
 		return
 	game_over = true
 
-	if score >= 150:
+	if score >= 300:
 		get_tree().change_scene_to_file("res://Scene/bintang-3.tscn")
-	elif score >= 10:
+	elif score >= 150:
 		get_tree().change_scene_to_file("res://Scene/bintang-2.tscn")
 	else:
 		get_tree().change_scene_to_file("res://Scene/bintang-1.tscn")

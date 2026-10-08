@@ -1,0 +1,113 @@
+[gd_scene format=3 uid="uid://tb1rnp8i57wl"]
+
+[ext_resource type="Texture2D" uid="uid://b5vobe6mf88xr" path="res://Asset Game/Background.png" id="1_8y8yp"]
+[ext_resource type="Texture2D" uid="uid://ckoskhwd8o1kc" path="res://Asset Game/Screenshot_20260927_152553-removebg-preview.png" id="2_ke8yv"]
+[ext_resource type="Texture2D" uid="uid://b7d0iw07a0rad" path="res://Asset Game/Screenshot_20260927_154922-removebg-preview.png" id="3_ablb1"]
+[ext_resource type="Texture2D" uid="uid://brd27arte3l2i" path="res://Asset Game/Screenshot_20260927_155226-removebg-preview.png" id="4_3onvn"]
+[ext_resource type="Script" path="res://Script/star_result.gd" id="5_star"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mvx6v"]
+bg_color = Color(0.95686275, 0.91764706, 0.8235294, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jopsx"]
+bg_color = Color(0.81960785, 0.74509805, 0.5568628, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72156864, 0.5647059, 0.32156864, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="StarUI" type="Control" unique_id=863457792]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("5_star")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=971601864]
+modulate = Color(0.556953, 0.556953, 0.556953, 1)
+layout_mode = 0
+offset_right = 1156.0
+offset_bottom = 650.0
+texture = ExtResource("1_8y8yp")
+
+[node name="UIGroup" type="Control" parent="." unique_id=1416734085]
+anchors_preset = 0
+offset_left = -192.0
+offset_top = -185.0
+offset_right = 4.0
+offset_bottom = -4.0
+scale = Vector2(1.2, 1.2)
+
+[node name="PanelContainer" type="PanelContainer" parent="UIGroup" unique_id=1045119624]
+layout_mode = 0
+offset_left = 724.99994
+offset_top = 419.16666
+offset_right = 1189.1666
+offset_bottom = 817.5
+theme_override_styles/panel = SubResource("StyleBoxFlat_mvx6v")
+
+[node name="MarginContainer" type="MarginContainer" parent="UIGroup/PanelContainer" unique_id=2016884803]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UIGroup/PanelContainer/MarginContainer" unique_id=953563790]
+layout_mode = 2
+
+[node name="PanelContainer2" type="PanelContainer" parent="UIGroup" unique_id=1646109577]
+layout_mode = 0
+offset_left = 748.0
+offset_top = 545.0
+offset_right = 1172.0
+offset_bottom = 660.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_jopsx")
+
+[node name="Label" type="Label" parent="UIGroup/PanelContainer2" unique_id=933918338]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8784314, 0.1254902, 0.1254902, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 25
+text = "YAH, MASIH KURANG DISIPLIN! COBA LAGI DAN PERHATIKAN ATURAN SEKOLAH!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Star" type="TextureRect" parent="UIGroup" unique_id=1904473946]
+layout_mode = 0
+offset_left = 895.8333
+offset_top = 414.99997
+offset_right = 1026.8333
+offset_bottom = 545.0
+texture = ExtResource("2_ke8yv")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UIGroup/Star" unique_id=1618058735]
+layout_mode = 0
+offset_left = -62.0
+offset_top = 259.5
+offset_right = 215.0
+offset_bottom = 325.5
+
+[node name="TextureButton" type="TextureButton" parent="UIGroup/Star/HBoxContainer" unique_id=1021534296]
+layout_mode = 2
+texture_normal = ExtResource("3_ablb1")
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="UIGroup/Star" unique_id=514466081]
+layout_mode = 0
+offset_left = -60.0
+offset_top = 319.83347
+offset_right = 171.0
+offset_bottom = 394.83347
+
+[node name="TextureButton2" type="TextureButton" parent="UIGroup/Star/HBoxContainer2" unique_id=190561544]
+layout_mode = 2
+texture_normal = ExtResource("4_3onvn")

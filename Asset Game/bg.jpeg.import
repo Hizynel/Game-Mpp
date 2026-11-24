@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://chn6s4ajytxao"
-path="res://.godot/imported/frame_06.png-bbb4b2ab3737daa198cf0659654799bd.ctex"
+uid="uid://dspmfg1ena0iw"
+path="res://.godot/imported/bg.jpeg-324b94adfc3d55e348a8acfb2539c1d3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://jalan(11)/jalan/frame_06.png"
-dest_files=["res://.godot/imported/frame_06.png-bbb4b2ab3737daa198cf0659654799bd.ctex"]
+source_file="res://Asset Game/bg.jpeg"
+dest_files=["res://.godot/imported/bg.jpeg-324b94adfc3d55e348a8acfb2539c1d3.ctex"]
 
 [params]
 

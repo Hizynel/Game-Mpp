@@ -1,6 +1,6 @@
 extends Area2D
 
-var lane_positions = [-460.0, -29.0, 445.0]  # kiri, tengah, kanan
+var lane_positions = [-550.0, -29.0, 575.0]  # kiri, tengah, kanan
 var current_lane := 1  # mulai di tengah
 var lane_switch_speed := 0.5  # durasi geser antar lane (detik)
 

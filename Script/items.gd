@@ -1,5 +1,7 @@
 extends Area2D
 @export var speed := 0.3
+@export var lebar_jalur := 1.25 # Makin besar angkanya (misal 1.15 - 1.5), jarak kiri-kanan makin lebar
+
 var depth := 0.0
 var start_x := 943.0
 var target_x := 563.0
@@ -40,13 +42,21 @@ func _ready():
 func _process(delta):
 	time_alive += delta
 	depth += speed * delta
-	var eased_depth = ease(depth, 2.0)
+	var eased_depth = ease(depth, 1.6)
 	var ukuran = lerp(0.08, 2.0, eased_depth)
 	scale = Vector2(ukuran, ukuran)
 
-	var base_y = lerp(459.0, 990.0, eased_depth)
-	position.y = base_y + sin(time_alive * bob_speed) * bob_amount * ukuran
-	position.x = lerp(start_x, target_x, eased_depth)
+	# Lebarkan jarak kiri dan kanan dari titik tengah jalur (913.0)
+	var tengah = 913.0
+	var start_x_lebar = tengah + (start_x - tengah) * lebar_jalur
+	var target_x_lebar = tengah + (target_x - tengah) * lebar_jalur
+
+	# Target Y dinaikkan ke 1150.0 agar item terus melaju keluar layar
+	var base_y = lerp(400.0, 1150.0, eased_depth)
+	# Pantulan dibatasi agar tidak menahan laju turun item saat membesar
+	var pantulan = sin(time_alive * bob_speed) * 6.0 * min(ukuran, 1.0)
+	position.y = base_y + pantulan
+	position.x = lerp(start_x_lebar, target_x_lebar, eased_depth)
 
 	modulate.a = clamp(depth / 0.15, 0.0, 1.0)
 

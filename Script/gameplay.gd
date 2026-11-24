@@ -12,19 +12,22 @@ var lanes = [
 	1491.0
 ]
 
+# Deck item: 24 benar & 24 salah = 48 item (16 wave x 3 item)
+var item_pool: Array[bool] = []
+const JUMLAH_ITEM_PER_JENIS := 24
+
 # ==============================================================================
 # SPAWN SYSTEM
 # ==============================================================================
 
 var spawn_timer := 0.0
 
-# Awal game
-var start_min_delay := 2.0
-var start_max_delay := 3.0
+# Disesuaikan untuk 16 wave (48 item) dalam 60 detik
+var start_min_delay := 3.5
+var start_max_delay := 3.8
 
-# Akhir game
-var end_min_delay := 1.0
-var end_max_delay := 1.5
+var end_min_delay := 3.1
+var end_max_delay := 3.4
 
 var next_spawn_delay := 0.0
 
@@ -33,10 +36,9 @@ var next_spawn_delay := 0.0
 # ==============================================================================
 
 var score := 0
-var max_score := 1000
+var max_score := 500
 
-# [P2W 2X MULTIPLIER]
-const MULTIPLIER_COST := 3 # Biaya 3 koin dari database
+const MULTIPLIER_COST := 3
 var score_multiplier := 1
 var is_multiplier_active := false
 
@@ -47,7 +49,7 @@ var max_combo := 0
 # TIMER SYSTEM + FITUR P2W CONTINUE / EXTRA TIME (BIAYA: 5 KOIN)
 # ==============================================================================
 
-const EXTRA_TIME_COST := 5 # Biaya 5 koin dari database
+const EXTRA_TIME_COST := 5
 var game_time_limit := 60.0
 var game_timer := 0.0
 var game_over := false
@@ -64,10 +66,8 @@ var max_continue := 3
 @onready var timer_label: Label = $TimerLabel
 @onready var coins_label: Label = $CoinsLabel
 
-# UI Tombol 2x Multiplier
 @onready var multiplier_button: Button = $MultiplierButton
 
-# UI Popup Continue / Tambah Waktu
 @onready var continue_popup: Control = $ContinuePopup
 @onready var add_time_button: Button = $ContinuePopup/Panel/AddTimeButton
 @onready var give_up_button: Button = $ContinuePopup/Panel/GiveUpButton
@@ -80,31 +80,32 @@ var max_continue := 3
 
 func _ready() -> void:
 	randomize()
+	isi_deck_item(JUMLAH_ITEM_PER_JENIS)
 
 	update_score_label()
 	update_combo_label()
 	update_timer_label()
 	update_coins_label(NetworkManager.current_coins)
 
-	# Hubungkan sinyal update koin dari NetworkManager
 	NetworkManager.coins_updated.connect(_on_coins_updated)
 
-	# Jika mengetes langsung di scene gameplay (F6), otomatis login untuk mengambil data koin
 	if NetworkManager.current_coins == 0:
 		NetworkManager.login_player(NetworkManager.current_username)
 
-	next_spawn_delay = randf_range(
-		start_min_delay,
-		start_max_delay
-	)
+	next_spawn_delay = 0.5
 
-	# Setup awal Continue Popup
 	if continue_popup:
 		continue_popup.hide()
-		# PENTING: Process Mode Always agar tombol bisa diklik saat game di-pause
 		continue_popup.process_mode = Node.PROCESS_MODE_ALWAYS
 
 	_setup_button_signals()
+
+
+func isi_deck_item(jumlah_masing_masing: int) -> void:
+	for i in range(jumlah_masing_masing):
+		item_pool.append(true)
+		item_pool.append(false)
+	item_pool.shuffle()
 
 
 func _setup_button_signals() -> void:
@@ -133,84 +134,59 @@ func _process(delta: float) -> void:
 	if game_over:
 		return
 
-	# Timer game berjalan
 	game_timer += delta
 	update_timer_label()
 
-	# Cek jika waktu permainan habis
 	if game_timer >= game_time_limit:
 		trigger_time_out()
 		return
 
-	# Spawn timer untuk memunculkan wave item terus-menerus
 	spawn_timer += delta
 
 	if spawn_timer >= next_spawn_delay:
 		spawn_timer = 0.0
 
-		var progress = clamp(
-			game_timer / game_time_limit,
-			0.0,
-			1.0
-		)
+		var progress = clamp(game_timer / game_time_limit, 0.0, 1.0)
+		var current_min = lerp(start_min_delay, end_min_delay, progress)
+		var current_max = lerp(start_max_delay, end_max_delay, progress)
 
-		var current_min = lerp(
-			start_min_delay,
-			end_min_delay,
-			progress
-		)
-
-		var current_max = lerp(
-			start_max_delay,
-			end_max_delay,
-			progress
-		)
-
-		next_spawn_delay = randf_range(
-			current_min,
-			current_max
-		)
-
+		next_spawn_delay = randf_range(current_min, current_max)
 		spawn_wave()
 
 
 # ==============================================================================
-# SPAWN WAVE (3 ITEM SEKALIGUS: 1 BENAR, 2 SALAH)
+# SPAWN WAVE (3 ITEM SEKALIGUS DARI DECK ACAK)
 # ==============================================================================
 
 func spawn_wave() -> void:
-	# Pilih secara acak jalur (lane) mana yang akan menjadi item BENAR
-	var good_lane_idx = randi() % lanes.size()
+	if item_pool.is_empty():
+		return
 
-	# Munculkan 3 item sekaligus di ketiga jalur jalan
-	for i in range(lanes.size()):
+	# Ambil 3 item dari deck untuk mengisi ketiga jalur (kiri, tengah, kanan)
+	var jumlah_muncul = min(lanes.size(), item_pool.size())
+	for i in range(jumlah_muncul):
+		var status_benar: bool = item_pool.pop_back()
 		var item = item_scene.instantiate()
 		item.target_x = lanes[i]
 		item.position = Vector2(943, 482)
-		
-		# Tepat 1 item bernilai TRUE, dan 2 item lainnya bernilai FALSE
-		item.is_good = (i == good_lane_idx)
-		
+		item.is_good = status_benar
 		$Items.add_child(item)
 
 
 # ==============================================================================
-# FITUR P2W 1: BELI 2X POINT MULTIPLIER (BIAYA: 3 KOIN DARI DATABASE)
+# FITUR P2W 1: BELI 2X POINT MULTIPLIER
 # ==============================================================================
 
 func _on_multiplier_button_pressed() -> void:
 	if is_multiplier_active:
 		return
 
-	# Cek apakah koin di database mencukupi (3 koin)
 	if NetworkManager.current_coins < MULTIPLIER_COST:
 		show_notice("Koin Tidak Cukup! Butuh %d Koin." % MULTIPLIER_COST, Color(1.0, 0.2, 0.2))
 		return
 
-	# Kunci tombol sementara proses pemotongan koin di database
 	multiplier_button.disabled = true
 
-	# Potong koin di database melalui API / Localhost
 	NetworkManager.deduct_coins(
 		"2x Point Multiplier",
 		MULTIPLIER_COST,
@@ -219,7 +195,6 @@ func _on_multiplier_button_pressed() -> void:
 				activate_double_points()
 				show_notice("2X Point Aktif! (-3 🪙)", Color(1.0, 0.85, 0.1))
 			else:
-				# Buka kembali tombol jika gagal
 				multiplier_button.disabled = false
 				show_notice(error_msg, Color(1.0, 0.2, 0.2))
 	)
@@ -258,7 +233,6 @@ func add_score(amount: int) -> void:
 	elif combo >= 3:
 		combo_bonus = 5
 
-	# TOTAL POIN DIKALIKAN SCORE_MULTIPLIER (P2W)
 	var final_score = (amount + combo_bonus) * score_multiplier
 
 	score += final_score
@@ -283,7 +257,7 @@ func subtract_score(amount: int) -> void:
 
 
 # ==============================================================================
-# FITUR P2W 2: TAMBAH WAKTU / CONTINUE SCREEN (BIAYA: 5 KOIN DARI DATABASE)
+# FITUR P2W 2: TAMBAH WAKTU / CONTINUE SCREEN
 # ==============================================================================
 
 func trigger_time_out() -> void:
@@ -291,20 +265,14 @@ func trigger_time_out() -> void:
 		end_game()
 		return
 
-	# Reset pesan deskripsi dialog
 	if popup_description:
 		popup_description.text = "Waktu habis! Tambah waktu +30 detik seharga 5 Koin untuk lanjut bermain?"
 
-	# Pause seluruh permainan
 	get_tree().paused = true
-
-	# Munculkan popup Tambah Waktu
 	continue_popup.show()
 
 
-# Pemain memilih untuk membeli waktu tambahan (+30s seharga 5 koin)
 func _on_add_time_button_pressed() -> void:
-	# Cek apakah koin pemain mencukupi (5 koin)
 	if NetworkManager.current_coins < EXTRA_TIME_COST:
 		if popup_description:
 			popup_description.text = "❌ Koin tidak cukup! Butuh 5 Koin (Sisa Koin: %d)" % NetworkManager.current_coins
@@ -312,7 +280,6 @@ func _on_add_time_button_pressed() -> void:
 
 	add_time_button.disabled = true
 
-	# Potong koin di database via API / Localhost
 	NetworkManager.deduct_coins(
 		"Tambah Waktu (+30s)",
 		EXTRA_TIME_COST,
@@ -323,16 +290,14 @@ func _on_add_time_button_pressed() -> void:
 				continue_count += 1
 				var extra_seconds := 30.0
 				game_time_limit += extra_seconds
+				isi_deck_item(12)
 
 				print("[P2W] Tambah waktu sukses! (-5 🪙). Sisa koin: %d" % remaining_coins)
 
 				if continue_popup:
 					continue_popup.hide()
 
-				# Lanjutkan game
 				get_tree().paused = false
-
-				# Langsung trigger wave berikutnya agar pemain langsung melihat gameplay bergerak kembali
 				spawn_timer = next_spawn_delay - 0.2
 				show_notice("Waktu +30s! (-5 🪙)", Color(0.2, 1.0, 0.3))
 			else:
@@ -341,7 +306,6 @@ func _on_add_time_button_pressed() -> void:
 	)
 
 
-# Pemain memilih untuk menyerah / tidak menambah waktu
 func _on_give_up_button_pressed() -> void:
 	if continue_popup:
 		continue_popup.hide()
@@ -351,7 +315,7 @@ func _on_give_up_button_pressed() -> void:
 
 
 # ==============================================================================
-# NOTIFIKASI FLOATING UI UNTUK FEEDBACK PEMBELIAN KOIN
+# NOTIFIKASI FLOATING UI
 # ==============================================================================
 
 func show_notice(msg: String, color: Color) -> void:
@@ -391,7 +355,7 @@ func update_timer_label() -> void:
 
 
 # ==============================================================================
-# END GAME (KIRIM SKOR AKHIR KE DATABASE & PINDAH SCENE)
+# END GAME
 # ==============================================================================
 
 func end_game() -> void:
@@ -401,7 +365,6 @@ func end_game() -> void:
 
 	get_tree().paused = false
 
-	# Kirim skor akhir ke database
 	var player_name = NetworkManager.current_username
 	print("[Gameplay] Permainan berakhir! Menyimpan skor untuk: ", player_name)
 
@@ -412,10 +375,9 @@ func end_game() -> void:
 		is_multiplier_active
 	)
 
-	# Berpindah ke Scene bintang finish
-	if score >= 300:
+	if score >= 350:
 		get_tree().change_scene_to_file("res://Scene/bintang-3.tscn")
-	elif score >= 150:
+	elif score >= 180:
 		get_tree().change_scene_to_file("res://Scene/bintang-2.tscn")
 	else:
 		get_tree().change_scene_to_file("res://Scene/bintang-1.tscn")

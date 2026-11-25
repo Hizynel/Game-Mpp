@@ -12,7 +12,7 @@ var lanes = [
 	1491.0
 ]
 
-# Deck item: 24 benar & 24 salah = 48 item (24 wave x 2 item)
+# Deck item per sesi/player: 24 benar & 24 salah = 48 item
 var item_pool: Array[bool] = []
 const JUMLAH_ITEM_PER_JENIS := 24
 
@@ -31,13 +31,13 @@ var end_max_delay := 2.3
 var next_spawn_delay := 0.0
 
 # ==============================================================================
-# SCORE & COMBO SYSTEM + FITUR P2W 2X MULTIPLIER (BIAYA: 150 KOIN)
+# SCORE & COMBO SYSTEM + FITUR P2W 2X MULTIPLIER (BIAYA: 50 KOIN)
 # ==============================================================================
 
 var score := 0
 var max_score := 500
 
-const MULTIPLIER_COST := 150
+const MULTIPLIER_COST := 50
 var score_multiplier := 1
 var is_multiplier_active := false
 
@@ -45,10 +45,10 @@ var combo := 0
 var max_combo := 0
 
 # ==============================================================================
-# TIMER SYSTEM + FITUR P2W CONTINUE / EXTRA TIME (BIAYA: 100 KOIN)
+# TIMER SYSTEM + FITUR P2W CONTINUE / EXTRA TIME (BIAYA: 50 KOIN)
 # ==============================================================================
 
-const EXTRA_TIME_COST := 100
+const EXTRA_TIME_COST := 50
 var game_time_limit := 60.0
 var game_timer := 0.0
 var game_over := false
@@ -79,12 +79,14 @@ var max_continue := 3
 
 func _ready() -> void:
 	randomize()
+	item_pool.clear()
 	isi_deck_item(JUMLAH_ITEM_PER_JENIS)
 
 	update_score_label()
 	update_combo_label()
 	update_timer_label()
 	update_coins_label(NetworkManager.current_coins)
+	_update_p2w_button_texts()
 
 	NetworkManager.coins_updated.connect(_on_coins_updated)
 
@@ -99,6 +101,13 @@ func _ready() -> void:
 		continue_popup.process_mode = Node.PROCESS_MODE_ALWAYS
 
 	_setup_button_signals()
+
+
+func _update_p2w_button_texts() -> void:
+	if multiplier_button and not is_multiplier_active:
+		multiplier_button.text = "⚡ 2X POINT (%d 🪙)" % MULTIPLIER_COST
+	if add_time_button:
+		add_time_button.text = "⏱️ Tambah Waktu +30s (%d 🪙)" % EXTRA_TIME_COST
 
 
 func isi_deck_item(jumlah_masing_masing: int) -> void:
@@ -176,7 +185,7 @@ func spawn_wave() -> void:
 
 
 # ==============================================================================
-# FITUR P2W 1: BELI 2X POINT MULTIPLIER (ACTION: score_multiplier = 150 KOIN)
+# FITUR P2W 1: BELI 2X POINT MULTIPLIER (ACTION: score_multiplier = 50 KOIN)
 # ==============================================================================
 
 func _on_multiplier_button_pressed() -> void:
@@ -259,7 +268,7 @@ func subtract_score(amount: int) -> void:
 
 
 # ==============================================================================
-# FITUR P2W 2: TAMBAH WAKTU / CONTINUE SCREEN (ACTION: extra_time = 100 KOIN)
+# FITUR P2W 2: TAMBAH WAKTU / CONTINUE SCREEN (ACTION: extra_time = 50 KOIN)
 # ==============================================================================
 
 func trigger_time_out() -> void:

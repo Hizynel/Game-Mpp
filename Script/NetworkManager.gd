@@ -171,6 +171,45 @@ func _do_player_login(identifier: String, password: String, on_completed: Callab
 
 
 # ==============================================================================
+# LOGOUT PEMAIN (Hapus Token Sesi & Reset Data Akun)
+# ==============================================================================
+func logout_player(on_completed: Callable = Callable()) -> void:
+	if player_bearer_token != "":
+		var http_request = HTTPRequest.new()
+		http_request.process_mode = Node.PROCESS_MODE_ALWAYS
+		add_child(http_request)
+
+		http_request.request_completed.connect(
+			func(result: int, response_code: int, _headers: PackedStringArray, _body: PackedByteArray):
+				http_request.queue_free()
+				print("[NetworkManager] Logout API request selesai (Kode: %d)" % response_code)
+		)
+
+		var headers = [
+			"Accept: application/json",
+			"Authorization: Bearer " + player_bearer_token
+		]
+		var url = API_BASE_URL + "/auth/logout"
+		http_request.request(url, headers, HTTPClient.METHOD_POST)
+
+	# Reset semua data sesi lokal
+	player_bearer_token = ""
+	current_username = ""
+	current_email = ""
+	current_display_name = ""
+	current_coins = 0
+	is_logged_in = false
+	current_session_id = ""
+	current_session_token = ""
+
+	print("[NetworkManager] Pemain berhasil logout. Data sesi telah dibersihkan.")
+	coins_updated.emit(0)
+
+	if on_completed.is_valid():
+		on_completed.call(true)
+
+
+# ==============================================================================
 # 3. SPEND COIN RESMI (POST /games/{slug}/economy/spend)
 # Action codes: 'game_entry' (1 coin), 'extra_time' (2 coins)
 # ==============================================================================

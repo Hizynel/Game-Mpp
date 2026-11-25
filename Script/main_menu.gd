@@ -2,7 +2,7 @@ extends Control
 
 @onready var video_player: VideoStreamPlayer = $VideoStreamPlayer
 @onready var start_button: TextureButton = $Button
-@onready var quit_button: TextureButton = $Button2
+@onready var logout_button: TextureButton = $Button2
 @onready var peringkat_button: TextureButton = $Button3
 @onready var logo: Sprite2D = $Logo
 @onready var click_sound: AudioStreamPlayer2D = $Button/click_sound
@@ -21,7 +21,7 @@ extends Control
 func _ready() -> void:
 	video_player.finished.connect(_on_video_finished)
 	peringkat_button.pressed.connect(_on_peringkat_pressed)
-	quit_button.pressed.connect(_on_button_2_pressed)
+	logout_button.pressed.connect(_on_logout_pressed)
 	btn_close_popup.pressed.connect(func(): insufficient_popup.hide())
 
 	NetworkManager.coins_updated.connect(_on_coins_updated)
@@ -92,7 +92,7 @@ func _on_button_pressed() -> void:
 			bgm_music.stop()
 
 			start_button.hide()
-			quit_button.hide()
+			logout_button.hide()
 			peringkat_button.hide()
 			logo.hide()
 			video_player.play()
@@ -109,9 +109,23 @@ func _on_video_finished() -> void:
 	get_tree().change_scene_to_file("res://Scene/tutorial.tscn")
 
 
-func _on_button_2_pressed() -> void:
+func _on_logout_pressed() -> void:
 	click_sound.play()
-	get_tree().quit()
+	print("[MainMenu] Pengguna menekan Logout. Membersihkan sesi akun...")
+	logout_button.disabled = true
+
+	# Panggil fungsi logout di NetworkManager
+	NetworkManager.logout_player(func(ok: bool):
+		# Kembali ke scene login/username untuk memasukkan akun baru dari API
+		_fade_to_black_and_change_scene("res://Scene/username.tscn")
+	)
+
+
+func _fade_to_black_and_change_scene(target_scene: String) -> void:
+	var tween = create_tween()
+	tween.tween_property(self, "modulate", Color.BLACK, 0.8).set_trans(Tween.TRANS_SINE)
+	await tween.finished
+	get_tree().change_scene_to_file(target_scene)
 
 
 func _on_peringkat_pressed() -> void:

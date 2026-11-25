@@ -1,34 +1,41 @@
 extends Node
 
 # ==============================================================================
-# [PENGATURAN API: PIXEL 2 REALITY (P2R) GLOBAL API]
+# [PENGATURAN RESMI: PIXEL 2 REALITY (P2R) API GATE CHECK]
 # ==============================================================================
-# DEFAULT_API_URL:
-# - Bisa menggunakan URL Server Online (jika ada domain / IP publik)
-# - Atau fallback otomatis ke Localhost Server (http://127.0.0.1:3000/api)
+# Dokumentasi & Kredensial Handoff:
+# Base URL: https://pameran.devsaka.id/api/v1
+# Game Slug: gate-check
 # ==============================================================================
 
-# URL API Server Online / Public (Bisa diisi jika sudah ada domain online atau hosting)
-const REMOTE_API_URL: String = "https://api.pixel2reality.fun/api"
+const API_BASE_URL: String = "https://pameran.devsaka.id/api/v1"
+const GAME_SLUG: String = "gate-check"
 
-# URL API Server Lokal
-const LOCAL_API_URL: String = "http://127.0.0.1:3000/api"
+# Runtime Credentials
+const CLIENT_ID: String = "p2r_game_dwkpzk1twd32urh9"
+const CLIENT_SECRET: String = "sec_L7EUUd00SWQblzpvIc3umtnYUBlsAPIlmaHU57Z1"
 
-# Identitas Game untuk Global Unified Leaderboard
-const GAME_ID: String = "game_mpp"
-
-# Biaya Masuk Permainan (1 - 500 Coins, rekomendasi default 50 Coins = Rp500)
-const PLAY_GAME_COST: int = 50
+# Biaya Koin Permainan (Configured actions di P2R):
+# - game_entry = 1 coin
+# - extra_time = 2 coins
+const PLAY_GAME_COST: int = 1
 
 # ==============================================================================
-# DATA GLOBAL PEMAIN & KOIN
+# DATA RUNTIME PEMAIN, TOKEN & SESI
 # ==============================================================================
+var game_access_token: String = ""
+var game_token_expires_at: float = 0.0
+
+var player_bearer_token: String = ""
 var current_username: String = ""
 var current_email: String = ""
 var current_display_name: String = ""
-var current_coins: int = 1000
+var current_coins: int = 0
 var is_logged_in: bool = false
-var current_active_api_url: String = LOCAL_API_URL
+
+# Active Session Data
+var current_session_id: String = ""
+var current_session_token: String = ""
 
 # Sinyal sistem
 signal login_completed(success: bool, message: String)
@@ -36,68 +43,24 @@ signal coins_updated(new_coins: int)
 signal score_submitted(success: bool, response_data: Dictionary)
 signal leaderboard_received(success: bool, data: Array)
 
-# Offline Demo Mock Database (Fallback Mandiri jika server API offline / WiFi beda)
-const DEMO_USERS = {
-	"saepudin.cihuy@pixel2reality.fun": {
-		"username": "saepudin.cihuy",
-		"displayName": "Saepudin Cihuy",
-		"password": "saepudin#cihuy-1945",
-		"coins": 1000
-	},
-	"kang.kerupuk@pixel2reality.fun": {
-		"username": "kang.kerupuk",
-		"displayName": "Kang Kerupuk",
-		"password": "kerupuk#renyah-1945",
-		"coins": 1000
-	},
-	"lord.geprek@pixel2reality.fun": {
-		"username": "lord.geprek",
-		"displayName": "Lord Geprek",
-		"password": "geprek#level99",
-		"coins": 1000
-	},
-	"masbro.kentang@pixel2reality.fun": {
-		"username": "masbro.kentang",
-		"displayName": "Masbro Kentang",
-		"password": "kentang#crispy-404",
-		"coins": 1000
-	}
-}
-
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	# Gunakan Local API URL sebagai prioritas stabil
-	current_active_api_url = LOCAL_API_URL
-
-
-func get_base_url() -> String:
-	return current_active_api_url
+	# Dapatkan Game Access Token di awal
+	ensure_game_token()
 
 
 # ==============================================================================
-# 1. LOGIN USER / AKUN TEST P2R DENGAN DUAL-FALLBACK SYSTEM
+# 1. GAME ACCESS TOKEN EXCHANGE (POST /games/{slug}/auth/token)
 # ==============================================================================
-func login_player(identifier: String, password: String = "", on_completed: Callable = Callable()) -> void:
-	var id_clean = identifier.strip_edges()
-	var pass_clean = password.strip_edges()
+func ensure_game_token(on_completed: Callable = Callable()) -> void:
+	var current_time = Time.get_unix_time_from_system()
+	if game_access_token != "" and current_time < (game_token_expires_at - 60):
+		if on_completed.is_valid():
+			on_completed.call(true)
+		return
 
-	# Coba hubungi API Server terlebih dahulu
-	_request_api_login(id_clean, pass_clean, func(success: bool, msg: String, coins: int):
-		if success:
-			if on_completed.is_valid():
-				on_completed.call(true, msg, coins)
-		else:
-			# Jika gagal menghubungi server (misal server belum start / port tertutup),
-			# otomatis aktifkan Fallback Offline Demo Auth agar akun demo SELALU BISA LOGIN!
-			print("[NetworkManager] Server API tidak merespons, mengaktifkan Offline Demo Fallback...")
-			_offline_login_fallback(id_clean, pass_clean, on_completed)
-	)
-
-
-func _request_api_login(identifier: String, password: String, cb: Callable) -> void:
 	var http_request = HTTPRequest.new()
-	http_request.timeout = 3.0 # Timeout cepat agar user tidak menunggu lama
 	http_request.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(http_request)
 
@@ -106,178 +69,285 @@ func _request_api_login(identifier: String, password: String, cb: Callable) -> v
 			http_request.queue_free()
 
 			if response_code == 200 or response_code == 201:
-				var response_text = body.get_string_from_utf8()
-				var parsed = JSON.parse_string(response_text)
-
-				if parsed is Dictionary and parsed.get("success", false) == true:
-					current_username = parsed.get("username", identifier)
-					current_email = parsed.get("email", "")
-					current_display_name = parsed.get("displayName", current_username)
-					current_coins = int(parsed.get("coins", 1000))
-					is_logged_in = true
-
-					print("[NetworkManager] Online API Login Berhasil: %s | Coins: %d" % [current_display_name, current_coins])
-					coins_updated.emit(current_coins)
-					login_completed.emit(true, "Login Berhasil (Server API)")
-					cb.call(true, "Login Berhasil (Server API)", current_coins)
+				var res_text = body.get_string_from_utf8()
+				var parsed = JSON.parse_string(res_text)
+				if parsed is Dictionary and parsed.has("data"):
+					var data = parsed["data"]
+					game_access_token = data.get("access_token", "")
+					var expires_in = data.get("expires_in", 900)
+					game_token_expires_at = Time.get_unix_time_from_system() + expires_in
+					print("[NetworkManager] Game Access Token resmi P2R didapatkan.")
+					if on_completed.is_valid():
+						on_completed.call(true)
 					return
 
-			# Jika respons kode bukan 200/201 atau gagal konek
-			cb.call(false, "Server API tidak merespons (Kode: %d)" % response_code, 0)
+			push_warning("[NetworkManager] Gagal mendapatkan Game Access Token (Kode: %d)" % response_code)
+			if on_completed.is_valid():
+				on_completed.call(false)
 	)
 
 	var payload = {
-		"email": identifier if identifier.contains("@") else "",
-		"username": identifier,
-		"password": password
+		"client_id": CLIENT_ID,
+		"client_secret": CLIENT_SECRET
 	}
-	var json_string = JSON.stringify(payload)
-	var headers = ["Content-Type: application/json"]
-	var target_url = get_base_url() + "/player/login"
-
-	var err = http_request.request(target_url, headers, HTTPClient.METHOD_POST, json_string)
+	var headers = [
+		"Content-Type: application/json",
+		"Accept: application/json"
+	]
+	var url = API_BASE_URL + "/games/" + GAME_SLUG + "/auth/token"
+	var err = http_request.request(url, headers, HTTPClient.METHOD_POST, JSON.stringify(payload))
 	if err != OK:
 		http_request.queue_free()
-		cb.call(false, "Koneksi HTTP Error", 0)
-
-
-func _offline_login_fallback(identifier: String, password: String, on_completed: Callable) -> void:
-	var id_lower = identifier.to_lower()
-
-	# Cek apakah akun cocok dengan salah satu akun Demo P2R
-	var matched_user = null
-	for email_key in DEMO_USERS.keys():
-		var demo = DEMO_USERS[email_key]
-		if id_lower == email_key.to_lower() or id_lower == demo["username"].to_lower():
-			matched_user = demo
-			break
-
-	if matched_user != null:
-		# Validasi password jika ada
-		if password != "" and matched_user["password"] != password:
-			var err = "Password salah untuk akun demo!"
-			push_warning("[NetworkManager] " + err)
-			login_completed.emit(false, err)
-			if on_completed.is_valid():
-				on_completed.call(false, err, 0)
-			return
-
-		current_username = matched_user["username"]
-		current_email = identifier if identifier.contains("@") else identifier + "@pixel2reality.fun"
-		current_display_name = matched_user["displayName"]
-		current_coins = matched_user["coins"]
-		is_logged_in = true
-
-		print("[NetworkManager] ✅ Berhasil Login Akun Demo: %s | Saldo: %d Coins" % [current_display_name, current_coins])
-		coins_updated.emit(current_coins)
-		login_completed.emit(true, "Login Akun Demo Berhasil!")
 		if on_completed.is_valid():
-			on_completed.call(true, "Login Akun Demo Berhasil!", current_coins)
-	else:
-		# Akun kustom baru
-		var clean_name = identifier.split("@")[0]
-		current_username = clean_name
-		current_email = identifier if identifier.contains("@") else ""
-		current_display_name = clean_name.capitalize()
-		current_coins = 1000
-		is_logged_in = true
-
-		print("[NetworkManager] ✅ Berhasil Login Akun: %s | Saldo: %d Coins" % [current_display_name, current_coins])
-		coins_updated.emit(current_coins)
-		login_completed.emit(true, "Login Berhasil!")
-		if on_completed.is_valid():
-			on_completed.call(true, "Login Berhasil!", current_coins)
+			on_completed.call(false)
 
 
 # ==============================================================================
-# 2. POTONG KOIN PEMAIN (SPEND COINS)
+# 2. LOGIN PEMAIN RESMI P2R (POST /auth/login)
+# Mendapatkan Sanctum Bearer Token & Wallet Balance
 # ==============================================================================
-func deduct_coins(item_name: String, cost: int, on_result: Callable) -> void:
-	# Cek saldo
-	if current_coins < cost:
-		var err_msg = "Koin tidak cukup! Butuh %d Coins, koin Anda: %d Coins" % [cost, current_coins]
-		push_warning("[NetworkManager] " + err_msg)
+func login_player(identifier: String, password: String = "", on_completed: Callable = Callable()) -> void:
+	ensure_game_token(func(token_ok: bool):
+		_do_player_login(identifier, password, on_completed)
+	)
+
+
+func _do_player_login(identifier: String, password: String, on_completed: Callable) -> void:
+	var http_request = HTTPRequest.new()
+	http_request.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(http_request)
+
+	http_request.request_completed.connect(
+		func(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray):
+			http_request.queue_free()
+
+			var res_text = body.get_string_from_utf8()
+			var parsed = JSON.parse_string(res_text)
+
+			if response_code == 200 and parsed is Dictionary and parsed.has("data"):
+				var data = parsed["data"]
+				player_bearer_token = data.get("token", "")
+				var user = data.get("user", {})
+				current_display_name = user.get("name", identifier)
+				current_email = user.get("email", identifier)
+				current_username = current_email.split("@")[0]
+
+				var wallet = user.get("wallet", {})
+				current_coins = int(wallet.get("balance", 0))
+				is_logged_in = true
+
+				print("[NetworkManager] Login Berhasil: %s | Saldo: %d Coins" % [current_display_name, current_coins])
+				coins_updated.emit(current_coins)
+				login_completed.emit(true, "Login Berhasil")
+				if on_completed.is_valid():
+					on_completed.call(true, "Login Berhasil", current_coins)
+			else:
+				var err_msg = "Gagal login (Kode: %d)" % response_code
+				if parsed is Dictionary and parsed.has("message") and str(parsed["message"]) != "":
+					err_msg = str(parsed["message"])
+				elif parsed is Dictionary and parsed.has("errors"):
+					err_msg = str(parsed["errors"])
+
+				push_warning("[NetworkManager] Login gagal: " + err_msg)
+				login_completed.emit(false, err_msg)
+				if on_completed.is_valid():
+					on_completed.call(false, err_msg, 0)
+	)
+
+	var payload = {
+		"email": identifier.strip_edges(),
+		"password": password.strip_edges()
+	}
+	var headers = [
+		"Content-Type: application/json",
+		"Accept: application/json"
+	]
+	var url = API_BASE_URL + "/auth/login"
+	var err = http_request.request(url, headers, HTTPClient.METHOD_POST, JSON.stringify(payload))
+	if err != OK:
+		http_request.queue_free()
+		if on_completed.is_valid():
+			on_completed.call(false, "Gagal koneksi HTTP", 0)
+
+
+# ==============================================================================
+# 3. SPEND COIN RESMI (POST /games/{slug}/economy/spend)
+# Action codes: 'game_entry' (1 coin), 'extra_time' (2 coins)
+# ==============================================================================
+func deduct_coins(action_code_or_item: String, cost: int, on_result: Callable) -> void:
+	# Terjemahkan nama item ke action_code P2R
+	var action_code = "game_entry"
+	if action_code_or_item.contains("Waktu") or action_code_or_item == "extra_time":
+		action_code = "extra_time"
+	elif action_code_or_item.contains("game_entry") or action_code_or_item.contains("Mulai"):
+		action_code = "game_entry"
+
+	# Pastikan ada token
+	if player_bearer_token == "":
+		current_coins = max(0, current_coins - cost)
+		coins_updated.emit(current_coins)
 		if on_result.is_valid():
-			on_result.call(false, current_coins, err_msg)
+			on_result.call(true, current_coins, "")
 		return
 
-	# Kurangi koin langsung di client
-	current_coins -= cost
-	coins_updated.emit(current_coins)
-
-	# Simpan juga ke Server API jika sedang online
 	var http_request = HTTPRequest.new()
-	http_request.timeout = 3.0
 	http_request.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(http_request)
 
 	http_request.request_completed.connect(
 		func(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray):
 			http_request.queue_free()
-			# Selesai sync background ke database
+
+			var res_text = body.get_string_from_utf8()
+			var parsed = JSON.parse_string(res_text)
+
+			if response_code == 200 and parsed is Dictionary and parsed.has("data"):
+				var data = parsed["data"]
+				var tx = data.get("transaction", {})
+				current_coins = int(tx.get("balance_after", current_coins - cost))
+				print("[NetworkManager] Koin dipotong P2R: action=%s, sisa=%d" % [action_code, current_coins])
+				coins_updated.emit(current_coins)
+				if on_result.is_valid():
+					on_result.call(true, current_coins, "")
+			else:
+				var err_msg = "Koin tidak cukup atau transaksi gagal."
+				if parsed is Dictionary and parsed.has("message") and str(parsed["message"]) != "":
+					err_msg = str(parsed["message"])
+				push_warning("[NetworkManager] Gagal potong koin: " + err_msg)
+				if on_result.is_valid():
+					on_result.call(false, current_coins, err_msg)
 	)
 
 	var payload = {
-		"username": current_username if current_username != "" else current_email,
-		"game_id": GAME_ID,
-		"item_name": item_name,
-		"cost": cost
+		"action_code": action_code
 	}
-	var json_string = JSON.stringify(payload)
-	var headers = ["Content-Type: application/json"]
-	var target_url = get_base_url() + "/player/deduct_coins"
-
-	http_request.request(target_url, headers, HTTPClient.METHOD_POST, json_string)
-
-	# Berikan konfirmasi sukses langsung ke gameplay
-	if on_result.is_valid():
-		on_result.call(true, current_coins, "")
-
-
-# ==============================================================================
-# 3. KIRIM DATA SKOR AKHIR KE GLOBAL UNIFIED LEADERBOARD
-# ==============================================================================
-func submit_score(username: String, final_score: int, max_combo: int, used_multiplier: bool = false) -> void:
-	var player_identifier = username
-	if player_identifier == "" and current_username != "":
-		player_identifier = current_username
-
-	var http_request = HTTPRequest.new()
-	http_request.timeout = 3.0
-	http_request.process_mode = Node.PROCESS_MODE_ALWAYS
-	add_child(http_request)
-
-	http_request.request_completed.connect(
-		func(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray):
-			http_request.queue_free()
-			score_submitted.emit(true, {})
-	)
-
-	var payload = {
-		"username": player_identifier,
-		"game_id": GAME_ID,
-		"score": final_score,
-		"max_combo": max_combo,
-		"used_multiplier": used_multiplier,
-		"created_at": Time.get_datetime_string_from_system()
-	}
-
-	var json_string = JSON.stringify(payload)
-	var headers = ["Content-Type: application/json"]
-	var target_url = get_base_url() + "/score"
-
-	var err = http_request.request(target_url, headers, HTTPClient.METHOD_POST, json_string)
+	var headers = [
+		"Content-Type: application/json",
+		"Accept: application/json",
+		"Authorization: Bearer " + player_bearer_token,
+		"X-Game-Access-Token: " + game_access_token
+	]
+	var url = API_BASE_URL + "/games/" + GAME_SLUG + "/economy/spend"
+	var err = http_request.request(url, headers, HTTPClient.METHOD_POST, JSON.stringify(payload))
 	if err != OK:
 		http_request.queue_free()
-		score_submitted.emit(true, {})
+		if on_result.is_valid():
+			on_result.call(false, current_coins, "Gagal request HTTP")
 
 
 # ==============================================================================
-# 4. AMBIL GLOBAL UNIFIED LEADERBOARD
+# 4. GAME SESSIONS (START & COMPLETE SCORE)
+# POST /games/{slug}/sessions/start
+# POST /games/{slug}/sessions/{id}/complete
+# ==============================================================================
+func start_game_session(on_started: Callable = Callable()) -> void:
+	if player_bearer_token == "" or game_access_token == "":
+		if on_started.is_valid():
+			on_started.call(true, "offline_session")
+		return
+
+	var http_request = HTTPRequest.new()
+	http_request.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(http_request)
+
+	http_request.request_completed.connect(
+		func(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray):
+			http_request.queue_free()
+
+			var res_text = body.get_string_from_utf8()
+			var parsed = JSON.parse_string(res_text)
+
+			if response_code == 200 and parsed is Dictionary and parsed.has("data"):
+				var data = parsed["data"]
+				var session = data.get("session", {})
+				current_session_id = session.get("id", "")
+				current_session_token = data.get("session_token", "")
+				print("[NetworkManager] P2R Game Session Aktif: " + current_session_id)
+				if on_started.is_valid():
+					on_started.call(true, current_session_id)
+			else:
+				push_warning("[NetworkManager] Gagal memulai sesi P2R (Kode: %d)" % response_code)
+				if on_started.is_valid():
+					on_started.call(false, "")
+	)
+
+	var uuid_str = "%x-%x" % [Time.get_ticks_msec(), randi()]
+	var payload = {
+		"idempotency_key": uuid_str
+	}
+	var headers = [
+		"Content-Type: application/json",
+		"Accept: application/json",
+		"Authorization: Bearer " + player_bearer_token,
+		"X-Game-Access-Token: " + game_access_token
+	]
+	var url = API_BASE_URL + "/games/" + GAME_SLUG + "/sessions/start"
+	var err = http_request.request(url, headers, HTTPClient.METHOD_POST, JSON.stringify(payload))
+	if err != OK:
+		http_request.queue_free()
+		if on_started.is_valid():
+			on_started.call(false, "")
+
+
+func submit_score(_username: String, final_score: int, max_combo: int, used_multiplier: bool = false) -> void:
+	if current_session_id == "" or current_session_token == "":
+		print("[NetworkManager] Tidak ada active session, submit score offline selesai.")
+		score_submitted.emit(true, {})
+		return
+
+	var http_request = HTTPRequest.new()
+	http_request.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(http_request)
+
+	http_request.request_completed.connect(
+		func(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray):
+			http_request.queue_free()
+
+			if response_code == 200 or response_code == 201:
+				print("[NetworkManager] Skor berhasil dikirim ke P2R Leaderboard!")
+				score_submitted.emit(true, {})
+			else:
+				push_warning("[NetworkManager] Gagal submit skor ke P2R (Kode: %d)" % response_code)
+				score_submitted.emit(false, {})
+
+			current_session_id = ""
+			current_session_token = ""
+	)
+
+	var payload = {
+		"session_token": current_session_token,
+		"score": final_score,
+		"data": {
+			"score": final_score,
+			"max_combo": max_combo,
+			"multiplier_used": used_multiplier,
+			"total_time": 60
+		}
+	}
+	var headers = [
+		"Content-Type: application/json",
+		"Accept: application/json",
+		"Authorization: Bearer " + player_bearer_token,
+		"X-Game-Access-Token: " + game_access_token
+	]
+	var url = API_BASE_URL + "/games/" + GAME_SLUG + "/sessions/" + current_session_id + "/complete"
+	var err = http_request.request(url, headers, HTTPClient.METHOD_POST, JSON.stringify(payload))
+	if err != OK:
+		http_request.queue_free()
+		score_submitted.emit(false, {})
+
+
+# ==============================================================================
+# 5. GLOBAL LEADERBOARD RESMI P2R (GET /games/{slug}/leaderboard)
 # ==============================================================================
 func get_leaderboard() -> void:
+	ensure_game_token(func(_ok: bool):
+		_do_get_leaderboard()
+	)
+
+
+func _do_get_leaderboard() -> void:
 	var http_request = HTTPRequest.new()
-	http_request.timeout = 3.0
 	http_request.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(http_request)
 
@@ -286,28 +356,28 @@ func get_leaderboard() -> void:
 			http_request.queue_free()
 
 			if response_code == 200:
-				var response_text = body.get_string_from_utf8()
-				var data = JSON.parse_string(response_text)
-				if data is Array and not data.is_empty():
-					leaderboard_received.emit(true, data)
+				var res_text = body.get_string_from_utf8()
+				var parsed = JSON.parse_string(res_text)
+
+				if parsed is Dictionary and parsed.has("data"):
+					var lb_array = parsed["data"].get("leaderboard", [])
+					print("[NetworkManager] Menerima %d entri Leaderboard resmi P2R" % lb_array.size())
+					leaderboard_received.emit(true, lb_array)
 					return
 
-			# Fallback Dummy Data Leaderboard jika server offline
-			var dummy_lb = [
-				{"display_name": "Saepudin Cihuy", "game_id": "game_mpp", "score": 450, "max_combo": 28},
-				{"display_name": "Kang Kerupuk", "game_id": "game_mpp", "score": 380, "max_combo": 22},
-				{"display_name": "Lord Geprek", "game_id": "game_arcade", "score": 320, "max_combo": 18},
-				{"display_name": "Masbro Kentang", "game_id": "game_runner", "score": 250, "max_combo": 15}
-			]
-			leaderboard_received.emit(true, dummy_lb)
+			leaderboard_received.emit(false, [])
 	)
 
-	var target_url = get_base_url() + "/leaderboard"
-	var err = http_request.request(target_url)
+	var headers = [
+		"Accept: application/json"
+	]
+	if game_access_token != "":
+		headers.append("X-Game-Access-Token: " + game_access_token)
+	if player_bearer_token != "":
+		headers.append("Authorization: Bearer " + player_bearer_token)
+
+	var url = API_BASE_URL + "/games/" + GAME_SLUG + "/leaderboard"
+	var err = http_request.request(url, headers)
 	if err != OK:
 		http_request.queue_free()
-		var dummy_lb = [
-			{"display_name": "Saepudin Cihuy", "game_id": "game_mpp", "score": 450, "max_combo": 28},
-			{"display_name": "Kang Kerupuk", "game_id": "game_mpp", "score": 380, "max_combo": 22}
-		]
-		leaderboard_received.emit(true, dummy_lb)
+		leaderboard_received.emit(false, [])

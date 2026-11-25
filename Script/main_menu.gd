@@ -45,11 +45,11 @@ func _update_coins_ui(coins: int) -> void:
 	if name_str == "":
 		name_str = NetworkManager.current_username
 	if name_str == "":
-		name_str = "Tamu P2R"
+		name_str = "Pemain P2R"
 
 	var cost = NetworkManager.PLAY_GAME_COST
 	coins_label.text = "🪙 %s Coins" % _format_number(coins)
-	user_info_label.text = "Akun: %s | Biaya Main: %d Coins" % [name_str, cost]
+	user_info_label.text = "Akun: %s | Biaya: %d Coin" % [name_str, cost]
 
 
 func _format_number(num: int) -> String:
@@ -67,37 +67,36 @@ func _format_number(num: int) -> String:
 # ==============================================================================
 # MEKANISME SPEND COIN SETIAP MULAI MAIN
 # ==============================================================================
-# 1. Cek saldo koin pemain (butuh 50 Coins)
-# 2. Jika cukup: Koin dipotong via API sebelum game dimulai
-# 3. Jika gagal/koin kurang: Tampilkan peringatan, game TIDAK dimulai
-# ==============================================================================
 func _on_button_pressed() -> void:
 	click_sound.play()
 
 	var cost = NetworkManager.PLAY_GAME_COST
 	if NetworkManager.current_coins < cost:
-		_show_error_popup("Koin Anda tidak cukup! Dibutuhkan %d Coins untuk bermain, sedangkan koin Anda hanya %d Coins.\n(100 Coins = Rp1.000)" % [cost, NetworkManager.current_coins])
+		_show_error_popup("Koin Anda tidak cukup! Dibutuhkan %d Coin untuk bermain, koin Anda: %d Coins.\nSilakan hubungi admin untuk topup." % [cost, NetworkManager.current_coins])
 		return
 
-	# Disable button sementara proses potong koin berlangsung
 	start_button.disabled = true
 
-	NetworkManager.deduct_coins("Mulai Permainan (Game Entrance)", cost, func(success: bool, remaining_coins: int, err_msg: String):
-		start_button.disabled = false
-
+	# 1. Potong koin game_entry (1 coin)
+	NetworkManager.deduct_coins("game_entry", cost, func(success: bool, remaining_coins: int, err_msg: String):
 		if not success:
-			# Jika gagal dipotong atau koneksi server gagal, game batal dimulai
+			start_button.disabled = false
 			_show_error_popup("Gagal memulai permainan!\n" + err_msg)
 			return
 
-		print("[MainMenu] Biaya main berhasil dipotong: %d Coins. Mulai intro/game..." % cost)
-		bgm_music.stop()
+		print("[MainMenu] Koin game_entry berhasil dipotong. Membuka sesi game P2R...")
 
-		start_button.hide()
-		quit_button.hide()
-		peringkat_button.hide()
-		logo.hide()
-		video_player.play()
+		# 2. Buka session resmi di P2R
+		NetworkManager.start_game_session(func(session_ok: bool, session_id: String):
+			start_button.disabled = false
+			bgm_music.stop()
+
+			start_button.hide()
+			quit_button.hide()
+			peringkat_button.hide()
+			logo.hide()
+			video_player.play()
+		)
 	)
 
 

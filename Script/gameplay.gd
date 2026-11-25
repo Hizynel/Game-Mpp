@@ -12,7 +12,7 @@ var lanes = [
 	1491.0
 ]
 
-# Deck item: 24 benar & 24 salah = 48 item (16 wave x 3 item)
+# Deck item: 24 benar & 24 salah = 48 item (24 wave x 2 item)
 var item_pool: Array[bool] = []
 const JUMLAH_ITEM_PER_JENIS := 24
 
@@ -22,23 +22,22 @@ const JUMLAH_ITEM_PER_JENIS := 24
 
 var spawn_timer := 0.0
 
-# Disesuaikan untuk 16 wave (48 item) dalam 60 detik
-var start_min_delay := 3.5
-var start_max_delay := 3.8
+var start_min_delay := 2.4
+var start_max_delay := 2.6
 
-var end_min_delay := 3.1
-var end_max_delay := 3.4
+var end_min_delay := 2.1
+var end_max_delay := 2.3
 
 var next_spawn_delay := 0.0
 
 # ==============================================================================
-# SCORE & COMBO SYSTEM + FITUR P2W 2X MULTIPLIER (BIAYA: 3 KOIN)
+# SCORE & COMBO SYSTEM + FITUR P2W 2X MULTIPLIER (BIAYA: 150 KOIN)
 # ==============================================================================
 
 var score := 0
 var max_score := 500
 
-const MULTIPLIER_COST := 3
+const MULTIPLIER_COST := 150
 var score_multiplier := 1
 var is_multiplier_active := false
 
@@ -46,10 +45,10 @@ var combo := 0
 var max_combo := 0
 
 # ==============================================================================
-# TIMER SYSTEM + FITUR P2W CONTINUE / EXTRA TIME (BIAYA: 5 KOIN)
+# TIMER SYSTEM + FITUR P2W CONTINUE / EXTRA TIME (BIAYA: 100 KOIN)
 # ==============================================================================
 
-const EXTRA_TIME_COST := 5
+const EXTRA_TIME_COST := 100
 var game_time_limit := 60.0
 var game_timer := 0.0
 var game_over := false
@@ -89,8 +88,9 @@ func _ready() -> void:
 
 	NetworkManager.coins_updated.connect(_on_coins_updated)
 
-	if NetworkManager.current_coins == 0:
-		NetworkManager.login_player(NetworkManager.current_username)
+	# Pastikan sesi P2R aktif agar skor akhir tercatat di leaderboard
+	if NetworkManager.is_logged_in and NetworkManager.current_session_id == "":
+		NetworkManager.start_game_session()
 
 	next_spawn_delay = 0.5
 
@@ -155,26 +155,28 @@ func _process(delta: float) -> void:
 
 
 # ==============================================================================
-# SPAWN WAVE (3 ITEM SEKALIGUS DARI DECK ACAK)
+# SPAWN WAVE (2 ITEM ACAK DARI DECK KE 2 JALUR ACAK)
 # ==============================================================================
 
 func spawn_wave() -> void:
 	if item_pool.is_empty():
 		return
 
-	# Ambil 3 item dari deck untuk mengisi ketiga jalur (kiri, tengah, kanan)
-	var jumlah_muncul = min(lanes.size(), item_pool.size())
+	var indeks_jalur = [0, 1, 2]
+	indeks_jalur.shuffle()
+
+	var jumlah_muncul = min(2, item_pool.size())
 	for i in range(jumlah_muncul):
 		var status_benar: bool = item_pool.pop_back()
 		var item = item_scene.instantiate()
-		item.target_x = lanes[i]
+		item.target_x = lanes[indeks_jalur[i]]
 		item.position = Vector2(943, 482)
 		item.is_good = status_benar
 		$Items.add_child(item)
 
 
 # ==============================================================================
-# FITUR P2W 1: BELI 2X POINT MULTIPLIER
+# FITUR P2W 1: BELI 2X POINT MULTIPLIER (ACTION: score_multiplier = 150 KOIN)
 # ==============================================================================
 
 func _on_multiplier_button_pressed() -> void:
@@ -188,12 +190,12 @@ func _on_multiplier_button_pressed() -> void:
 	multiplier_button.disabled = true
 
 	NetworkManager.deduct_coins(
-		"2x Point Multiplier",
+		"score_multiplier",
 		MULTIPLIER_COST,
 		func(success: bool, remaining_coins: int, error_msg: String):
 			if success:
 				activate_double_points()
-				show_notice("2X Point Aktif! (-3 🪙)", Color(1.0, 0.85, 0.1))
+				show_notice("2X Point Aktif! (-%d 🪙)" % MULTIPLIER_COST, Color(1.0, 0.85, 0.1))
 			else:
 				multiplier_button.disabled = false
 				show_notice(error_msg, Color(1.0, 0.2, 0.2))
@@ -257,7 +259,7 @@ func subtract_score(amount: int) -> void:
 
 
 # ==============================================================================
-# FITUR P2W 2: TAMBAH WAKTU / CONTINUE SCREEN
+# FITUR P2W 2: TAMBAH WAKTU / CONTINUE SCREEN (ACTION: extra_time = 100 KOIN)
 # ==============================================================================
 
 func trigger_time_out() -> void:
@@ -266,7 +268,7 @@ func trigger_time_out() -> void:
 		return
 
 	if popup_description:
-		popup_description.text = "Waktu habis! Tambah waktu +30 detik seharga 5 Koin untuk lanjut bermain?"
+		popup_description.text = "Waktu habis! Tambah waktu +30 detik seharga %d Koin untuk lanjut bermain?" % EXTRA_TIME_COST
 
 	get_tree().paused = true
 	continue_popup.show()
@@ -275,13 +277,13 @@ func trigger_time_out() -> void:
 func _on_add_time_button_pressed() -> void:
 	if NetworkManager.current_coins < EXTRA_TIME_COST:
 		if popup_description:
-			popup_description.text = "❌ Koin tidak cukup! Butuh 5 Koin (Sisa Koin: %d)" % NetworkManager.current_coins
+			popup_description.text = "❌ Koin tidak cukup! Butuh %d Koin (Sisa Koin: %d)" % [EXTRA_TIME_COST, NetworkManager.current_coins]
 		return
 
 	add_time_button.disabled = true
 
 	NetworkManager.deduct_coins(
-		"Tambah Waktu (+30s)",
+		"extra_time",
 		EXTRA_TIME_COST,
 		func(success: bool, remaining_coins: int, error_msg: String):
 			add_time_button.disabled = false
@@ -292,14 +294,14 @@ func _on_add_time_button_pressed() -> void:
 				game_time_limit += extra_seconds
 				isi_deck_item(12)
 
-				print("[P2W] Tambah waktu sukses! (-5 🪙). Sisa koin: %d" % remaining_coins)
+				print("[P2W] Tambah waktu sukses! (-%d 🪙). Sisa koin: %d" % [EXTRA_TIME_COST, remaining_coins])
 
 				if continue_popup:
 					continue_popup.hide()
 
 				get_tree().paused = false
 				spawn_timer = next_spawn_delay - 0.2
-				show_notice("Waktu +30s! (-5 🪙)", Color(0.2, 1.0, 0.3))
+				show_notice("Waktu +30s! (-%d 🪙)" % EXTRA_TIME_COST, Color(0.2, 1.0, 0.3))
 			else:
 				if popup_description:
 					popup_description.text = "❌ " + error_msg

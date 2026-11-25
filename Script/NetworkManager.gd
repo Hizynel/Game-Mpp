@@ -3,11 +3,6 @@ extends Node
 # ==============================================================================
 # [PENGATURAN RESMI: PIXEL 2 REALITY (P2R) API GATE CHECK]
 # ==============================================================================
-# Dokumentasi & Kredensial Handoff:
-# Base URL: https://pameran.devsaka.id/api/v1
-# Game Slug: gate-check
-# ==============================================================================
-
 const API_BASE_URL: String = "https://pameran.devsaka.id/api/v1"
 const GAME_SLUG: String = "gate-check"
 
@@ -15,10 +10,11 @@ const GAME_SLUG: String = "gate-check"
 const CLIENT_ID: String = "p2r_game_dwkpzk1twd32urh9"
 const CLIENT_SECRET: String = "sec_L7EUUd00SWQblzpvIc3umtnYUBlsAPIlmaHU57Z1"
 
-# Biaya Koin Permainan (Configured actions di P2R):
-# - game_entry = 1 coin
-# - extra_time = 2 coins
-const PLAY_GAME_COST: int = 1
+# Biaya Koin Permainan sesuai P2R Developer Portal:
+# - game_entry = 50 coins
+# - extra_time = 100 coins
+# - score_multiplier = 150 coins
+const PLAY_GAME_COST: int = 50
 
 # ==============================================================================
 # DATA RUNTIME PEMAIN, TOKEN & SESI
@@ -46,7 +42,6 @@ signal leaderboard_received(success: bool, data: Array)
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	# Dapatkan Game Access Token di awal
 	ensure_game_token()
 
 
@@ -70,7 +65,7 @@ func ensure_game_token(on_completed: Callable = Callable()) -> void:
 
 			if response_code == 200 or response_code == 201:
 				var res_text = body.get_string_from_utf8()
-				var parsed = JSON.parse_string(res_text)
+				var parsed = JSON.parse_string(res_text) if res_text != "" else null
 				if parsed is Dictionary and parsed.has("data"):
 					var data = parsed["data"]
 					game_access_token = data.get("access_token", "")
@@ -104,7 +99,6 @@ func ensure_game_token(on_completed: Callable = Callable()) -> void:
 
 # ==============================================================================
 # 2. LOGIN PEMAIN RESMI P2R (POST /auth/login)
-# Mendapatkan Sanctum Bearer Token & Wallet Balance
 # ==============================================================================
 func login_player(identifier: String, password: String = "", on_completed: Callable = Callable()) -> void:
 	ensure_game_token(func(token_ok: bool):
@@ -122,7 +116,7 @@ func _do_player_login(identifier: String, password: String, on_completed: Callab
 			http_request.queue_free()
 
 			var res_text = body.get_string_from_utf8()
-			var parsed = JSON.parse_string(res_text)
+			var parsed = JSON.parse_string(res_text) if res_text != "" else null
 
 			if response_code == 200 and parsed is Dictionary and parsed.has("data"):
 				var data = parsed["data"]
@@ -171,7 +165,7 @@ func _do_player_login(identifier: String, password: String, on_completed: Callab
 
 
 # ==============================================================================
-# LOGOUT PEMAIN (Hapus Token Sesi & Reset Data Akun)
+# LOGOUT PEMAIN
 # ==============================================================================
 func logout_player(on_completed: Callable = Callable()) -> void:
 	if player_bearer_token != "":
@@ -192,7 +186,6 @@ func logout_player(on_completed: Callable = Callable()) -> void:
 		var url = API_BASE_URL + "/auth/logout"
 		http_request.request(url, headers, HTTPClient.METHOD_POST)
 
-	# Reset semua data sesi lokal
 	player_bearer_token = ""
 	current_username = ""
 	current_email = ""
@@ -211,17 +204,17 @@ func logout_player(on_completed: Callable = Callable()) -> void:
 
 # ==============================================================================
 # 3. SPEND COIN RESMI (POST /games/{slug}/economy/spend)
-# Action codes: 'game_entry' (1 coin), 'extra_time' (2 coins)
+# Action codes: 'game_entry' (50), 'extra_time' (100), 'score_multiplier' (150)
 # ==============================================================================
 func deduct_coins(action_code_or_item: String, cost: int, on_result: Callable) -> void:
-	# Terjemahkan nama item ke action_code P2R
 	var action_code = "game_entry"
 	if action_code_or_item.contains("Waktu") or action_code_or_item == "extra_time":
 		action_code = "extra_time"
+	elif action_code_or_item.contains("Multiplier") or action_code_or_item == "score_multiplier":
+		action_code = "score_multiplier"
 	elif action_code_or_item.contains("game_entry") or action_code_or_item.contains("Mulai"):
 		action_code = "game_entry"
 
-	# Pastikan ada token
 	if player_bearer_token == "":
 		current_coins = max(0, current_coins - cost)
 		coins_updated.emit(current_coins)
@@ -238,7 +231,7 @@ func deduct_coins(action_code_or_item: String, cost: int, on_result: Callable) -
 			http_request.queue_free()
 
 			var res_text = body.get_string_from_utf8()
-			var parsed = JSON.parse_string(res_text)
+			var parsed = JSON.parse_string(res_text) if res_text != "" else null
 
 			if response_code == 200 and parsed is Dictionary and parsed.has("data"):
 				var data = parsed["data"]
@@ -276,8 +269,6 @@ func deduct_coins(action_code_or_item: String, cost: int, on_result: Callable) -
 
 # ==============================================================================
 # 4. GAME SESSIONS (START & COMPLETE SCORE)
-# POST /games/{slug}/sessions/start
-# POST /games/{slug}/sessions/{id}/complete
 # ==============================================================================
 func start_game_session(on_started: Callable = Callable()) -> void:
 	if player_bearer_token == "" or game_access_token == "":
@@ -294,7 +285,7 @@ func start_game_session(on_started: Callable = Callable()) -> void:
 			http_request.queue_free()
 
 			var res_text = body.get_string_from_utf8()
-			var parsed = JSON.parse_string(res_text)
+			var parsed = JSON.parse_string(res_text) if res_text != "" else null
 
 			if response_code == 200 and parsed is Dictionary and parsed.has("data"):
 				var data = parsed["data"]
@@ -396,7 +387,7 @@ func _do_get_leaderboard() -> void:
 
 			if response_code == 200:
 				var res_text = body.get_string_from_utf8()
-				var parsed = JSON.parse_string(res_text)
+				var parsed = JSON.parse_string(res_text) if res_text != "" else null
 
 				if parsed is Dictionary and parsed.has("data"):
 					var lb_array = parsed["data"].get("leaderboard", [])

@@ -1,6 +1,6 @@
 extends Area2D
 @export var speed := 0.3
-@export var lebar_jalur := 1.25 # Makin besar angkanya (misal 1.15 - 1.5), jarak kiri-kanan makin lebar
+@export var lebar_jalur := 1.25 
 
 var depth := 0.0
 var start_x := 943.0

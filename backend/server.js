@@ -11,15 +11,45 @@ app.use(express.json());
 // ==============================================================================
 // [PENGATURAN KONEKSI DATABASE MYSQL / MARIADB]
 // ==============================================================================
-// Sesuaikan username & password database komputer Anda di sini:
-// ==============================================================================
 const DB_CONFIG = {
     host: '127.0.0.1',
-    user: 'root',         // Ganti dengan username MySQL/MariaDB Anda
-    password: 'database', // Password MariaDB Anda
+    user: 'root',
+    password: 'database',
     database: 'game_godot',
     port: 3306
 };
+
+// Akun default P2R untuk testing
+const DEFAULT_TEST_ACCOUNTS = [
+    {
+        email: 'saepudin.cihuy@pixel2reality.fun',
+        username: 'saepudin.cihuy',
+        displayName: 'Saepudin Cihuy',
+        password: 'saepudin#cihuy-1945',
+        coins: 1000
+    },
+    {
+        email: 'kang.kerupuk@pixel2reality.fun',
+        username: 'kang.kerupuk',
+        displayName: 'Kang Kerupuk',
+        password: 'kerupuk#renyah-1945',
+        coins: 1000
+    },
+    {
+        email: 'lord.geprek@pixel2reality.fun',
+        username: 'lord.geprek',
+        displayName: 'Lord Geprek',
+        password: 'geprek#level99',
+        coins: 1000
+    },
+    {
+        email: 'masbro.kentang@pixel2reality.fun',
+        username: 'masbro.kentang',
+        displayName: 'Masbro Kentang',
+        password: 'kentang#crispy-404',
+        coins: 1000
+    }
+];
 
 let dbPool = null;
 
@@ -30,21 +60,39 @@ async function initDatabase() {
         const connection = await dbPool.getConnection();
         console.log(`✅ Berhasil terhubung ke database MariaDB/MySQL: [${DB_CONFIG.database}]`);
 
-        // Buat tabel jika masih kosongan
+        // 1. Buat tabel players dengan dukungan email & password
         await connection.query(`
             CREATE TABLE IF NOT EXISTS players (
                 id INT AUTO_INCREMENT PRIMARY KEY,
-                username VARCHAR(50) UNIQUE NOT NULL,
-                coins INT NOT NULL DEFAULT 20,
+                username VARCHAR(100) UNIQUE NOT NULL,
+                email VARCHAR(150) UNIQUE DEFAULT NULL,
+                password VARCHAR(255) DEFAULT NULL,
+                display_name VARCHAR(100) DEFAULT NULL,
+                coins INT NOT NULL DEFAULT 1000,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             );
         `);
 
+        // Migration check jika kolom belum ada
+        const [columns] = await connection.query(`SHOW COLUMNS FROM players;`);
+        const colNames = columns.map(c => c.Field);
+        if (!colNames.includes('email')) {
+            await connection.query(`ALTER TABLE players ADD COLUMN email VARCHAR(150) UNIQUE DEFAULT NULL AFTER username;`);
+        }
+        if (!colNames.includes('password')) {
+            await connection.query(`ALTER TABLE players ADD COLUMN password VARCHAR(255) DEFAULT NULL AFTER email;`);
+        }
+        if (!colNames.includes('display_name')) {
+            await connection.query(`ALTER TABLE players ADD COLUMN display_name VARCHAR(100) DEFAULT NULL AFTER password;`);
+        }
+
+        // 2. Buat tabel scores (Leaderboard global gabungan)
         await connection.query(`
             CREATE TABLE IF NOT EXISTS scores (
                 id INT AUTO_INCREMENT PRIMARY KEY,
-                username VARCHAR(50) NOT NULL,
+                username VARCHAR(100) NOT NULL,
+                game_id VARCHAR(50) DEFAULT 'game_mpp',
                 score INT NOT NULL,
                 max_combo INT NOT NULL DEFAULT 0,
                 used_multiplier BOOLEAN DEFAULT FALSE,
@@ -52,10 +100,18 @@ async function initDatabase() {
             );
         `);
 
+        const [scoreCols] = await connection.query(`SHOW COLUMNS FROM scores;`);
+        const scoreColNames = scoreCols.map(c => c.Field);
+        if (!scoreColNames.includes('game_id')) {
+            await connection.query(`ALTER TABLE scores ADD COLUMN game_id VARCHAR(50) DEFAULT 'game_mpp' AFTER username;`);
+        }
+
+        // 3. Buat tabel coin_transactions
         await connection.query(`
             CREATE TABLE IF NOT EXISTS coin_transactions (
                 id INT AUTO_INCREMENT PRIMARY KEY,
-                username VARCHAR(50) NOT NULL,
+                username VARCHAR(100) NOT NULL,
+                game_id VARCHAR(50) DEFAULT 'game_mpp',
                 item_name VARCHAR(100) NOT NULL,
                 cost INT NOT NULL,
                 remaining_coins INT NOT NULL,
@@ -63,44 +119,85 @@ async function initDatabase() {
             );
         `);
 
+        // Seed default test accounts jika belum ada
+        for (const acc of DEFAULT_TEST_ACCOUNTS) {
+            const [existing] = await connection.query(
+                'SELECT id FROM players WHERE email = ? OR username = ?',
+                [acc.email, acc.username]
+            );
+            if (existing.length === 0) {
+                await connection.query(
+                    'INSERT INTO players (username, email, password, display_name, coins) VALUES (?, ?, ?, ?, ?)',
+                    [acc.username, acc.email, acc.password, acc.displayName, acc.coins]
+                );
+                console.log(`[SEED] Akun P2R ditambahkan: ${acc.displayName} (${acc.email})`);
+            }
+        }
+
         connection.release();
         console.log("✅ Struktur tabel (players, scores, coin_transactions) sudah siap!");
     } catch (error) {
         console.error("❌ Gagal terhubung ke database MariaDB/MySQL:");
         console.error("   Pesan error:", error.message);
-        console.error("   👉 Pastikan service MariaDB/MySQL aktif dan sesuaikan 'password' di file backend/server.js!");
     }
 }
 
 // ==============================================================================
-// 1. ENDPOINT: LOGIN / DAFTAR PEMAIN & AMBIL SALDO KOIN
+// 1. ENDPOINT: LOGIN PEMAIN (Mendukung Email/Password & Username P2R)
 // ==============================================================================
 app.post('/api/player/login', async (req, res) => {
-    const { username } = req.body;
-    if (!username) {
-        return res.status(400).json({ success: false, message: "Username wajib diisi" });
+    const { email, username, password } = req.body;
+    const identifier = (email || username || '').trim();
+
+    if (!identifier) {
+        return res.status(400).json({ success: false, message: "Email atau Username wajib diisi" });
     }
 
     try {
-        // Cek apakah pemain sudah ada
-        const [rows] = await dbPool.query('SELECT * FROM players WHERE username = ?', [username]);
+        // Cek akun berdasarkan email atau username
+        const [rows] = await dbPool.query(
+            'SELECT * FROM players WHERE email = ? OR username = ?',
+            [identifier, identifier]
+        );
 
         if (rows.length > 0) {
             const player = rows[0];
-            console.log(`[LOGIN] Pemain ${username} masuk. Koin: ${player.coins}`);
+
+            // Validasi password jika dikirimkan oleh client dan ada di DB
+            if (password && player.password && player.password !== password.trim()) {
+                console.log(`[LOGIN GAGAL] Password salah untuk: ${identifier}`);
+                return res.status(401).json({ success: false, message: "Password salah!" });
+            }
+
+            console.log(`[LOGIN SUKSES] ${player.username} (${player.email || '-'}) masuk. Koin: ${player.coins}`);
             return res.json({
                 success: true,
+                id: player.id,
                 username: player.username,
+                email: player.email,
+                displayName: player.display_name || player.username,
                 coins: player.coins
             });
         } else {
-            // Pemain baru: berikan modal 20 koin
-            const startingCoins = 20;
-            await dbPool.query('INSERT INTO players (username, coins) VALUES (?, ?)', [username, startingCoins]);
-            console.log(`[REGISTER] Pemain baru dibuat: ${username} dengan modal ${startingCoins} koin.`);
+            // Pemain baru otomatis terdaftar (Modal awal 1000 koin untuk testing P2R)
+            const startingCoins = 1000;
+            const isEmail = identifier.includes('@');
+            const newEmail = isEmail ? identifier : null;
+            const newUsername = isEmail ? identifier.split('@')[0] : identifier;
+            const newDisplayName = newUsername;
+
+            const [result] = await dbPool.query(
+                'INSERT INTO players (username, email, password, display_name, coins) VALUES (?, ?, ?, ?, ?)',
+                [newUsername, newEmail, password ? password.trim() : null, newDisplayName, startingCoins]
+            );
+
+            console.log(`[REGISTER] Pemain baru dibuat: ${newUsername} dengan modal ${startingCoins} koin.`);
             return res.json({
                 success: true,
-                username: username,
+                id: result.insertId,
+                username: newUsername,
+                email: newEmail,
+                displayName: newDisplayName,
                 coins: startingCoins
             });
         }
@@ -116,7 +213,7 @@ app.post('/api/player/login', async (req, res) => {
 app.get('/api/player/:username/coins', async (req, res) => {
     const { username } = req.params;
     try {
-        const [rows] = await dbPool.query('SELECT coins FROM players WHERE username = ?', [username]);
+        const [rows] = await dbPool.query('SELECT coins FROM players WHERE username = ? OR email = ?', [username, username]);
         if (rows.length > 0) {
             return res.json({ success: true, username, coins: rows[0].coins });
         }
@@ -127,18 +224,17 @@ app.get('/api/player/:username/coins', async (req, res) => {
 });
 
 // ==============================================================================
-// 3. ENDPOINT: PENGURANGAN KOIN SAAT BELI FITUR P2W (2x Point & Tambah Waktu)
+// 3. ENDPOINT: PENGURANGAN KOIN (Spend Coins untuk Game Entrance / P2W)
 // ==============================================================================
 app.post('/api/player/deduct_coins', async (req, res) => {
-    const { username, item_name, cost } = req.body;
+    const { username, item_name, cost, game_id } = req.body;
 
     if (!username || cost === undefined || cost === null) {
         return res.status(400).json({ success: false, message: "Parameter tidak lengkap" });
     }
 
     try {
-        // Ambil saldo koin pemain saat ini
-        const [rows] = await dbPool.query('SELECT coins FROM players WHERE username = ?', [username]);
+        const [rows] = await dbPool.query('SELECT coins FROM players WHERE username = ? OR email = ?', [username, username]);
         if (rows.length === 0) {
             return res.status(404).json({ success: false, message: "Pemain tidak ditemukan" });
         }
@@ -147,29 +243,29 @@ app.post('/api/player/deduct_coins', async (req, res) => {
 
         // Cek kecukupan saldo koin
         if (currentCoins < cost) {
-            console.log(`[P2W GAGAL] ${username} mencoba beli ${item_name} (${cost} koin), tapi koin hanya ${currentCoins}.`);
-            return res.json({
+            console.log(`[SPEND KOIN GAGAL] ${username} butuh ${cost} koin, tapi koin hanya ${currentCoins}.`);
+            return res.status(400).json({
                 success: false,
-                message: `Koin tidak cukup! Butuh ${cost} koin, sisa koin Anda: ${currentCoins}`,
+                message: `Koin tidak cukup! Butuh ${cost} koin, koin Anda: ${currentCoins}`,
                 current_coins: currentCoins
             });
         }
 
         // Kurangi koin
         const remainingCoins = currentCoins - cost;
-        await dbPool.query('UPDATE players SET coins = ? WHERE username = ?', [remainingCoins, username]);
+        await dbPool.query('UPDATE players SET coins = ? WHERE username = ? OR email = ?', [remainingCoins, username, username]);
 
-        // Catat transaksi ke log audit
+        // Catat audit transaksi koin
         await dbPool.query(
-            'INSERT INTO coin_transactions (username, item_name, cost, remaining_coins) VALUES (?, ?, ?, ?)',
-            [username, item_name || 'Item P2W', cost, remainingCoins]
+            'INSERT INTO coin_transactions (username, game_id, item_name, cost, remaining_coins) VALUES (?, ?, ?, ?, ?)',
+            [username, game_id || 'game_mpp', item_name || 'Game Entrance', cost, remainingCoins]
         );
 
-        console.log(`[P2W SUKSES] ${username} membeli ${item_name} seharga ${cost} koin. Sisa koin: ${remainingCoins}`);
+        console.log(`[SPEND KOIN SUKSES] ${username} | Item: ${item_name} | Biaya: ${cost} | Sisa Koin: ${remainingCoins}`);
 
         return res.json({
             success: true,
-            message: `Berhasil membeli ${item_name}!`,
+            message: `Berhasil memotong ${cost} koin untuk ${item_name}!`,
             cost: cost,
             remaining_coins: remainingCoins
         });
@@ -181,30 +277,41 @@ app.post('/api/player/deduct_coins', async (req, res) => {
 });
 
 // ==============================================================================
-// 4. ENDPOINT: SIMPAN SKOR AKHIR GAMEPLAY
+// 4. ENDPOINT: SIMPAN SKOR AKHIR GAMEPLAY (Global Unified Leaderboard)
 // ==============================================================================
 app.post('/api/score', async (req, res) => {
-    const { username, score, max_combo, used_multiplier } = req.body;
+    const { username, score, max_combo, used_multiplier, game_id } = req.body;
 
     try {
         await dbPool.query(
-            'INSERT INTO scores (username, score, max_combo, used_multiplier) VALUES (?, ?, ?, ?)',
-            [username || 'Anonim', score || 0, max_combo || 0, !!used_multiplier]
+            'INSERT INTO scores (username, game_id, score, max_combo, used_multiplier) VALUES (?, ?, ?, ?, ?)',
+            [username || 'Anonim', game_id || 'game_mpp', score || 0, max_combo || 0, !!used_multiplier]
         );
 
-        console.log(`[SKOR DISIMPAN] ${username} | Skor: ${score} | Combo: ${max_combo} | 2x: ${used_multiplier}`);
-        return res.json({ success: true, message: "Skor berhasil disimpan ke database!" });
+        console.log(`[SKOR DISIMPAN] ${username} (${game_id || 'game_mpp'}) | Skor: ${score} | Combo: ${max_combo}`);
+        return res.json({ success: true, message: "Skor berhasil disimpan ke leaderboard!" });
     } catch (err) {
         return res.status(500).json({ success: false, message: err.message });
     }
 });
 
 // ==============================================================================
-// 5. ENDPOINT: AMBIL TOP LEADERBOARD
+// 5. ENDPOINT: AMBIL GLOBAL LEADERBOARD SATU KESATUAN
 // ==============================================================================
 app.get('/api/leaderboard', async (req, res) => {
+    const gameId = req.query.game_id;
     try {
-        const [rows] = await dbPool.query('SELECT username, score, max_combo, created_at FROM scores ORDER BY score DESC LIMIT 10');
+        let query = 'SELECT s.username, p.display_name, s.game_id, s.score, s.max_combo, s.created_at FROM scores s LEFT JOIN players p ON (s.username = p.username OR s.username = p.email)';
+        let params = [];
+
+        if (gameId) {
+            query += ' WHERE s.game_id = ?';
+            params.push(gameId);
+        }
+
+        query += ' ORDER BY s.score DESC LIMIT 20';
+
+        const [rows] = await dbPool.query(query, params);
         return res.json(rows);
     } catch (err) {
         return res.status(500).json({ success: false, message: err.message });
@@ -214,7 +321,7 @@ app.get('/api/leaderboard', async (req, res) => {
 // Jalankan Server
 app.listen(PORT, '0.0.0.0', async () => {
     console.log("=================================================================");
-    console.log(`🚀 API BACKEND GAME GODOT BERJALAN DI: http://127.0.0.1:${PORT}`);
+    console.log(`🚀 API BACKEND GAME P2R BERJALAN DI: http://127.0.0.1:${PORT}`);
     console.log("=================================================================");
     await initDatabase();
 });

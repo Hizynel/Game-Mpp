@@ -3,109 +3,67 @@
 [ext_resource type="Script" uid="uid://dmmne16ibr4" path="res://Script/username.gd" id="1_kd28b"]
 [ext_resource type="Texture2D" uid="uid://b5vobe6mf88xr" path="res://Asset Game/Background.png" id="2_po3fh"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_woch1"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-bg_color = Color(1, 0, 0, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+content_margin_left = 24.0
+content_margin_top = 24.0
+content_margin_right = 24.0
+content_margin_bottom = 24.0
+bg_color = Color(0.117647, 0.133333, 0.180392, 0.95)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 25
-corner_radius_top_right = 25
-corner_radius_bottom_right = 25
-corner_radius_bottom_left = 25
-corner_detail = 20
+border_color = Color(0.95, 0.75, 0.1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+corner_detail = 12
 
-[sub_resource type="FontVariation" id="FontVariation_wi7m3"]
-variation_embolden = 0.73
+[sub_resource type="FontVariation" id="FontVariation_title"]
+variation_embolden = 0.8
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_os3dv"]
-content_margin_left = 8.0
-content_margin_right = 8.0
-bg_color = Color(0.883378, 0.88337797, 0.88337797, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ysrpu"]
-bg_color = Color(0.88235295, 0.88235295, 0.88235295, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_input"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.92, 0.92, 0.94, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0, 0, 0, 1)
+border_color = Color(0.2, 0.2, 0.3, 0.5)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[sub_resource type="FontVariation" id="FontVariation_acybq"]
-variation_embolden = 0.73
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_login"]
+bg_color = Color(0.18, 0.65, 0.25, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 0.8)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eweqo"]
-bg_color = Color(1, 0, 0, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0, 0, 0, 1)
-corner_radius_bottom_right = 25
-corner_radius_bottom_left = 25
-
-[sub_resource type="FontVariation" id="FontVariation_kd28b"]
-variation_embolden = 0.73
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3xska"]
-bg_color = Color(0.25546083, 0.73782945, 0.112373285, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
-corner_detail = 20
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7dt7m"]
-bg_color = Color(0.25490198, 0.7372549, 0.11372549, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
-corner_detail = 20
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_po3fh"]
-bg_color = Color(0.25490198, 0.7372549, 0.11372549, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
-corner_detail = 20
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vrqxc"]
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
-corner_detail = 20
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7mipf"]
-bg_color = Color(0.25490198, 0.7372549, 0.11372549, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
-corner_detail = 20
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8besb"]
-bg_color = Color(0.25490198, 0.7372549, 0.11372549, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
-corner_detail = 20
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_preset"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.2, 0.25, 0.35, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.4, 0.6, 0.9, 0.8)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [node name="Username" type="Control" unique_id=1127487124]
 layout_mode = 3
@@ -117,69 +75,127 @@ grow_vertical = 2
 script = ExtResource("1_kd28b")
 
 [node name="Bg" type="Sprite2D" parent="." unique_id=1293210938]
-position = Vector2(959.49994, 539.5)
-scale = Vector2(1.0005208, 1.000926)
+position = Vector2(960, 540)
+scale = Vector2(1.002, 1.002)
 texture = ExtResource("2_po3fh")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1211553238]
 z_index = 1
-layout_mode = 0
-offset_left = 600.0
-offset_top = 508.0
-offset_right = 1320.0
-offset_bottom = 780.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_woch1")
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -380.0
+offset_top = -290.0
+offset_right = 380.0
+offset_bottom = 310.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=26608896]
 layout_mode = 2
-theme_override_constants/separation = 15
+theme_override_constants/separation = 12
 
 [node name="Title" type="Label" parent="PanelContainer/VBoxContainer" unique_id=238971186]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.99705297, 0.99705297, 0.99705297, 1)
-theme_override_fonts/font = SubResource("FontVariation_wi7m3")
-theme_override_font_sizes/font_size = 20
-text = "Who You Are?"
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_fonts/font = SubResource("FontVariation_title")
+theme_override_font_sizes/font_size = 32
+text = "PIXEL 2 REALITY (P2R)"
 horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="PanelContainer/VBoxContainer" unique_id=982892153]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 18
+text = "Masuk dengan Akun P2R untuk akses Coins & Global Leaderboard"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="LabelPreset" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.85, 1.0, 1)
+theme_override_font_sizes/font_size = 15
+text = "Pilih Akun Testing Resmi:"
+
+[node name="PresetContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="BtnPreset1" type="Button" parent="PanelContainer/VBoxContainer/PresetContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_preset")
+text = "Saepudin"
+
+[node name="BtnPreset2" type="Button" parent="PanelContainer/VBoxContainer/PresetContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_preset")
+text = "Kang Kerupuk"
+
+[node name="BtnPreset3" type="Button" parent="PanelContainer/VBoxContainer/PresetContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_preset")
+text = "Lord Geprek"
+
+[node name="BtnPreset4" type="Button" parent="PanelContainer/VBoxContainer/PresetContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_preset")
+text = "Masbro Kentang"
+
+[node name="EmailLabel" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 16
+text = "Email / Username:"
 
 [node name="UsernameInput" type="LineEdit" parent="PanelContainer/VBoxContainer" unique_id=1362285195]
-custom_minimum_size = Vector2(0, 45)
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.047058824, 0.03137255, 0.03137255, 1)
-theme_override_styles/normal = SubResource("StyleBoxFlat_os3dv")
-theme_override_styles/focus = SubResource("StyleBoxFlat_ysrpu")
+theme_override_colors/font_color = Color(0.05, 0.05, 0.05, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_input")
+placeholder_text = "Contoh: saepudin.cihuy@pixel2reality.fun"
 
-[node name="Title2" type="Label" parent="PanelContainer/VBoxContainer" unique_id=982892153]
+[node name="PasswordLabel" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 16
+text = "Password:"
+
+[node name="PasswordInput" type="LineEdit" parent="PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.05, 0.05, 0.05, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_input")
+placeholder_text = "Masukkan password akun..."
+secret = true
+
+[node name="StatusLabel" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+
+[node name="LanjutButton" type="Button" parent="PanelContainer/VBoxContainer" unique_id=544795118]
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("FontVariation_acybq")
-theme_override_font_sizes/font_size = 20
-text = "Ketika Nama Atau Username Kamu Di Atas"
-horizontal_alignment = 1
-autowrap_mode = 2
-
-[node name="Panel" type="Panel" parent="." unique_id=1752135869]
-layout_mode = 0
-offset_left = 809.0
-offset_top = 649.0
-offset_right = 1122.0
-offset_bottom = 818.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_eweqo")
-
-[node name="LanjutButton" type="Button" parent="Panel" unique_id=544795118]
-z_index = 1
-custom_minimum_size = Vector2(0, 45)
-layout_mode = 0
-offset_left = 38.0
-offset_top = 77.0
-offset_right = 277.0
-offset_bottom = 148.0
-theme_override_fonts/font = SubResource("FontVariation_kd28b")
-theme_override_font_sizes/font_size = 30
-theme_override_styles/normal = SubResource("StyleBoxFlat_3xska")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_7dt7m")
-theme_override_styles/hover = SubResource("StyleBoxFlat_po3fh")
-theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_vrqxc")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_7mipf")
-theme_override_styles/focus = SubResource("StyleBoxFlat_8besb")
-text = "Lanjut"
+theme_override_fonts/font = SubResource("FontVariation_title")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_login")
+text = "MASUK KE GAME (LOGIN)"

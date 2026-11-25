@@ -308,7 +308,7 @@ offset_right = 600.0
 offset_bottom = 205.0
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
 theme_override_font_sizes/font_size = 22
-text = "Waktu habis! Tambah waktu +30 detik seharga 5 Koin untuk lanjut bermain?"
+text = "Waktu habis! Tambah waktu +30 detik seharga 50 Koin untuk lanjut bermain?"
 horizontal_alignment = 1
 autowrap_mode = 2
 

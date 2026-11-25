@@ -33,10 +33,10 @@ var next_spawn_delay := 0.0
 # ==============================================================================
 
 var score := 0
-var max_score := 1000
+var max_score := 600
 
 # [P2W 2X MULTIPLIER]
-const MULTIPLIER_COST := 3 # Biaya 3 koin dari database
+const MULTIPLIER_COST := 50 # Biaya 50 koin
 var score_multiplier := 1
 var is_multiplier_active := false
 
@@ -44,10 +44,10 @@ var combo := 0
 var max_combo := 0
 
 # ==============================================================================
-# TIMER SYSTEM + FITUR P2W CONTINUE / EXTRA TIME (BIAYA: 5 KOIN)
+# TIMER SYSTEM + FITUR P2W CONTINUE / EXTRA TIME (BIAYA: 50 KOIN)
 # ==============================================================================
 
-const EXTRA_TIME_COST := 5 # Biaya 5 koin dari database
+const EXTRA_TIME_COST := 50 # Biaya 50 koin
 var game_time_limit := 60.0
 var game_timer := 0.0
 var game_over := false
@@ -202,7 +202,7 @@ func _on_multiplier_button_pressed() -> void:
 	if is_multiplier_active:
 		return
 
-	# Cek apakah koin di database mencukupi (3 koin)
+	# Cek apakah koin di database mencukupi (50 koin)
 	if NetworkManager.current_coins < MULTIPLIER_COST:
 		show_notice("Koin Tidak Cukup! Butuh %d Koin." % MULTIPLIER_COST, Color(1.0, 0.2, 0.2))
 		return
@@ -217,7 +217,7 @@ func _on_multiplier_button_pressed() -> void:
 		func(success: bool, remaining_coins: int, error_msg: String):
 			if success:
 				activate_double_points()
-				show_notice("2X Point Aktif! (-3 🪙)", Color(1.0, 0.85, 0.1))
+				show_notice("2X Point Aktif! (-%d 🪙)" % MULTIPLIER_COST, Color(1.0, 0.85, 0.1))
 			else:
 				# Buka kembali tombol jika gagal
 				multiplier_button.disabled = false
@@ -293,7 +293,7 @@ func trigger_time_out() -> void:
 
 	# Reset pesan deskripsi dialog
 	if popup_description:
-		popup_description.text = "Waktu habis! Tambah waktu +30 detik seharga 5 Koin untuk lanjut bermain?"
+		popup_description.text = "Waktu habis! Tambah waktu +30 detik seharga %d Koin untuk lanjut bermain?" % EXTRA_TIME_COST
 
 	# Pause seluruh permainan
 	get_tree().paused = true
@@ -302,12 +302,12 @@ func trigger_time_out() -> void:
 	continue_popup.show()
 
 
-# Pemain memilih untuk membeli waktu tambahan (+30s seharga 5 koin)
+# Pemain memilih untuk membeli waktu tambahan (+30s seharga 50 koin)
 func _on_add_time_button_pressed() -> void:
-	# Cek apakah koin pemain mencukupi (5 koin)
+	# Cek apakah koin pemain mencukupi (50 koin)
 	if NetworkManager.current_coins < EXTRA_TIME_COST:
 		if popup_description:
-			popup_description.text = "❌ Koin tidak cukup! Butuh 5 Koin (Sisa Koin: %d)" % NetworkManager.current_coins
+			popup_description.text = "❌ Koin tidak cukup! Butuh %d Koin (Sisa Koin: %d)" % [EXTRA_TIME_COST, NetworkManager.current_coins]
 		return
 
 	add_time_button.disabled = true
@@ -324,7 +324,7 @@ func _on_add_time_button_pressed() -> void:
 				var extra_seconds := 30.0
 				game_time_limit += extra_seconds
 
-				print("[P2W] Tambah waktu sukses! (-5 🪙). Sisa koin: %d" % remaining_coins)
+				print("[P2W] Tambah waktu sukses! (-%d 🪙). Sisa koin: %d" % [EXTRA_TIME_COST, remaining_coins])
 
 				if continue_popup:
 					continue_popup.hide()
@@ -334,7 +334,7 @@ func _on_add_time_button_pressed() -> void:
 
 				# Langsung trigger wave berikutnya agar pemain langsung melihat gameplay bergerak kembali
 				spawn_timer = next_spawn_delay - 0.2
-				show_notice("Waktu +30s! (-5 🪙)", Color(0.2, 1.0, 0.3))
+				show_notice("Waktu +30s! (-%d 🪙)" % EXTRA_TIME_COST, Color(0.2, 1.0, 0.3))
 			else:
 				if popup_description:
 					popup_description.text = "❌ " + error_msg
